@@ -18,7 +18,7 @@ class AddChangelog extends Command
     protected $signature = 'add 
                             {--f|force : Override existing changelog if one exists with the same name}
                             {--dry-run : Don\'t actually write anything, just print.}
-                            {--t|type=added : Type of changelog}
+                            {--t|type= : Type of changelog}
                             {--u|user : Use git user.name as author}
                             {--m|message= : Changelog entry}';
 
