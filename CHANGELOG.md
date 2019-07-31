@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGER -->
 
+## [v0.0.2] - 2019-07-31
+
+### Feature change (1 change)
+
+* New changelog entry is replaced by placholder
+
+
 ## [v0.0.1] - 2019-07-31
 
 ### New features (2 changes)
