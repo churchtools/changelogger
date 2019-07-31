@@ -85,14 +85,23 @@ class BuildChangelog extends Command
         $tag   = $this->argument('tag');
         $today = Carbon::now()->format('Y-m-d');
 
+        if (File::exists(getcwd() . '/CHANGELOG.md')) {
+            $fileContent = File::get(getcwd() . '/CHANGELOG.md');
+        }
+
         $content = <<<CONTENT
+<!-- CHANGELOGER -->
+
 ## [$tag] - $today
 
 $string
-\n
 CONTENT;
 
-        File::prepend(getcwd() . '/CHANGELOG.md', $content);
+        if (isset($fileContent)) {
+            $content = preg_replace('/<!-- CHANGELOGER -->/', $content, $fileContent);
+        }
+
+        File::put(getcwd() . '/CHANGELOG.md', $content);
     }
 
 
