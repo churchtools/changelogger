@@ -2,7 +2,6 @@
 
 namespace App\Commands;
 
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 use Symfony\Component\Yaml\Yaml;
@@ -157,18 +156,5 @@ class AddChangelog extends Command
         }
 
         return $author;
-    }
-
-
-    /**
-     * Define the command's schedule.
-     *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     */
-    public function schedule(Schedule $schedule) : void
-    {
-        // $schedule->command(static::class)->everyMinute();
     }
 }
