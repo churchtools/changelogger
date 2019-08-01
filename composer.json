@@ -1,18 +1,24 @@
 {
-    "name": "laravel-zero/laravel-zero",
-    "description": "The Laravel Zero Framework.",
-    "keywords": ["framework", "laravel", "laravel zero", "console", "cli"],
-    "homepage": "https://laravel-zero.com",
+    "name": "churchtools/changelogger",
+    "description": "CLI Tool for creating consistent and committable changelog entries.",
+    "keywords": ["churchtools", "changelog", "console", "cli"],
+    "homepage": "https://github.com/churchtools/changelogger",
     "type": "project",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/laravel-zero/laravel-zero/issues",
-        "source": "https://github.com/laravel-zero/laravel-zero"
+        "issues": "https://github.com/churchtools/changelogger/issues",
+        "source": "https://github.com/churchtools/changelogger"
     },
     "authors": [
         {
-            "name": "Nuno Maduro",
-            "email": "enunomaduro@gmail.com"
+            "name": "ChurchTools Innovations GmbH",
+            "email": "support@churchtools.de",
+            "role": "Company"
+        },
+        {
+            "name": "Hans-Helge Buerger",
+            "email": "hhbuerger@churchtools.de",
+            "role": "Developer"
         }
     ],
     "require": {
