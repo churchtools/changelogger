@@ -6,7 +6,7 @@
 
 At ChurchTools we develop a SaaS. To keep our users informed, we write changelogs for every version. We used to add our changelogs to the issue, but many times the changelog is forgotten to add and manually copy'n'paste is a tedious work. This tool helps us to write and create consistent changelogs, which are committable so the reviewer can check it before merging.
 
-***
+---
 
 ## Installation
 
@@ -16,6 +16,7 @@ You can require the package as dev-dependency
 ```bash
 composer require --dev churchtools/changelogger
 ```
+
 or install it globally.
 
 ```bash
@@ -38,4 +39,5 @@ changelogger clean
 
 ## License
 
-_to be defined_
+[churchtools/changelogger](https://github.com/churchtools/changelogger) is licensed under the
+[Apache License 2.0](LICENSE)
