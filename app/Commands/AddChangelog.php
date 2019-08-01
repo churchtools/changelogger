@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\LogEntry;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 use Symfony\Component\Yaml\Yaml;
@@ -19,7 +20,8 @@ class AddChangelog extends Command
                             {--dry-run : Don\'t actually write anything, just print.}
                             {--t|type= : Type of changelog}
                             {--u|user : Use git user.name as author}
-                            {--m|message= : Changelog entry}';
+                            {--m|message= : Changelog entry}
+                            {--empty : Add empty log}';
 
     /**
      * The description of the command.
@@ -70,6 +72,13 @@ class AddChangelog extends Command
         $this->validateType($type);
         $filename = $this->getFilename();
         $author   = $this->getAuthor();
+        $empty    = $this->option('empty');
+
+        if ($empty) {
+            $title  = LogEntry::EMPTY;
+            $type   = 'ignore';
+            $author = '';
+        }
 
         if ($type === null) {
             $type = $this->choice('Type of change', array_keys($this->types));
