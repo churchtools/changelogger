@@ -52,5 +52,5 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "bin": ["changelogger"]
+    "bin": ["builds/changelogger"]
 }
