@@ -107,7 +107,9 @@ CONTENT;
 
     private function generateContent(Collection $changes) : string
     {
-        $changes = $changes->groupBy('type');
+        $changes = $changes->groupBy('type')->filter(function (Collection $logType, $key) {
+            return $key !== 'ignore';
+        });
 
         return $changes->map(function (Collection $logType, $key) {
             $header  = Types::getName($key);
