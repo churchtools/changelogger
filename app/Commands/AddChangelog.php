@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\ChangesDirectory;
 use App\LogEntry;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
@@ -30,14 +31,7 @@ class AddChangelog extends Command
      */
     protected $description = 'Create a new changelog';
 
-    /**
-     * Path to changelog directory
-     *
-     * @var string
-     */
-    protected $path;
-
-    protected $types = [
+    private $types = [
         'New feature'             => 'added',
         'Bug fix'                 => 'fixed',
         'Feature change'          => 'changed',
@@ -48,14 +42,19 @@ class AddChangelog extends Command
         'Other'                   => 'other',
     ];
 
+    /** @var ChangesDirectory */
+    private $dir;
+
 
     /**
-     * MakeChangelog constructor.
+     * AddChangelog constructor.
+     *
+     * @param ChangesDirectory $dir
      */
-    public function __construct()
+    public function __construct(ChangesDirectory $dir)
     {
         parent::__construct();
-        $this->path = getcwd() . '/changelogs/unreleased';
+        $this->dir = $dir;
     }
 
 
@@ -66,7 +65,6 @@ class AddChangelog extends Command
      */
     public function handle()
     {
-        $this->initFolder();
         $title = $this->option('message');
         $type  = $this->option('type');
         $this->validateType($type);
@@ -96,7 +94,7 @@ class AddChangelog extends Command
         ];
 
         if ( ! $this->option('dry-run')) {
-            File::put($this->path . "/$filename", Yaml::dump($content));
+            File::put($this->dir->getPath() . "/$filename", Yaml::dump($content));
             $this->task("Saving Changelog changelogs/unreleased/$filename", function () {
                 return true;
             });
@@ -104,14 +102,6 @@ class AddChangelog extends Command
 
         $this->info('Changelog generated:');
         $this->line(Yaml::dump($content));
-    }
-
-
-    private function initFolder() : void
-    {
-        if ( ! File::exists($this->path)) {
-            File::makeDirectory($this->path, 0755, true);
-        }
     }
 
 
@@ -146,7 +136,7 @@ class AddChangelog extends Command
 
         $filename .= '.yml';
 
-        if (File::exists($this->path . "/$filename") && ! $this->option('force')) {
+        if (File::exists($this->dir->getPath() . "/$filename") && ! $this->option('force')) {
             $this->error('Changelog already exists. If you want to override the changelog use --force');
             die();
         }

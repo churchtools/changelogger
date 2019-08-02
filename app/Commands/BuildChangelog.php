@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\ChangesDirectory;
 use App\Types;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -26,21 +27,17 @@ class BuildChangelog extends Command
      */
     protected $description = 'Build new changelog from unreleased logs';
 
-    /**
-     * Path to changelog directory
-     *
-     * @var string
-     */
-    protected $path;
+    /** @var ChangesDirectory */
+    private $dir;
 
 
     /**
      * BuildChangelog constructor.
      */
-    public function __construct()
+    public function __construct(ChangesDirectory $dir)
     {
         parent::__construct();
-        $this->path = getcwd() . '/changelogs/unreleased';
+        $this->dir = $dir;
     }
 
 
@@ -51,16 +48,13 @@ class BuildChangelog extends Command
      */
     public function handle()
     {
-        $this->initFolder();
-        $allFiles = File::allFiles($this->path);
-
-        if (empty($allFiles)) {
+        if ($this->dir->hasChanges()) {
             $this->build('No changes.');
             exit();
         }
 
         $changes = collect();
-        foreach ($allFiles as $file) {
+        foreach ($this->dir->getAll() as $file) {
             $changes->push(Yaml::parse($file->getContents()));
         }
 
@@ -68,15 +62,9 @@ class BuildChangelog extends Command
         $this->build($content);
 
         $this->info("Changelog for {$this->argument('tag')} created");
-        File::delete($allFiles);
-    }
-
-
-    private function initFolder() : void
-    {
-        if ( ! File::exists($this->path)) {
-            File::makeDirectory($this->path, 0755, true);
-        }
+        $this->task('Clean unreleased changes', function () {
+            $this->call('clean', ['--quite']);
+        });
     }
 
 
