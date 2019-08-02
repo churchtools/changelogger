@@ -44,6 +44,7 @@ class BuildChangelog extends Command
     {
         parent::__construct();
         $this->dir   = $dir;
+        $this->dir->init();
         $this->types = $types;
     }
 

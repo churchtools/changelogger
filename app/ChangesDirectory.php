@@ -17,18 +17,19 @@ class ChangesDirectory
 
     /**
      * ChangesDirectory constructor.
+     *
+     * @param string|null $path
      */
     public function __construct()
     {
-        $this->path = getcwd() . '/changelogs/unreleased';
-        $this->initDirectory();
+        $this->path = config('changelogger.unreleased');
     }
 
 
     /**
      * Initialize changelogs/unreleased directory.
      */
-    private function initDirectory() : void
+    public function init() : void
     {
         if ( ! File::exists($this->path)) {
             File::makeDirectory($this->path, 0755, true);

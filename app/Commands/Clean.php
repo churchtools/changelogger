@@ -35,6 +35,7 @@ class Clean extends Command
     {
         parent::__construct();
         $this->dir = $dir;
+        $this->dir->init();
     }
 
 

@@ -6,6 +6,11 @@ use App\LogEntry;
 use Symfony\Component\Finder\SplFileInfo;
 use Tests\TestCase;
 
+/**
+ * Class LogEntryTest
+ * @package Tests\Feature
+ * @covers  \App\LogEntry
+ */
 class LogEntryTest extends TestCase
 {
 
@@ -21,7 +26,7 @@ class LogEntryTest extends TestCase
     }
 
 
-    public function testLogEntryToArray(): void
+    public function testLogEntryToArray() : void
     {
         $data = $this->sut->toArray();
         $this->assertEquals('Test Title', $data['title']);
@@ -30,9 +35,9 @@ class LogEntryTest extends TestCase
     }
 
 
-    public function testLogEntryToYaml():void
+    public function testLogEntryToYaml() : void
     {
-        $expected =<<<YAML
+        $expected = <<<YAML
 title: 'Test Title'
 type: 'Test Type'
 author: 'Test Author'
@@ -43,9 +48,9 @@ YAML;
     }
 
 
-    public function testParseLogEntryFromYaml(): void
+    public function testParseLogEntryFromYaml() : void
     {
-        $yaml =<<<YAML
+        $yaml = <<<YAML
 title: 'YAML File Title'
 type: 'YAML File Type'
 author: 'YAML File Author'
@@ -59,6 +64,7 @@ YAML;
         $this->assertEquals('YAML File Type', $this->sut->type());
         $this->assertEquals('YAML File Author', $this->sut->author());
     }
+
 
     protected function setUp() : void
     {
