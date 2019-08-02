@@ -65,4 +65,15 @@ class ChangesDirectory
     {
         return ! empty($this->getAll());
     }
+
+
+    /**
+     * Clean $path.
+     *
+     * Remove all unreleased changes.
+     */
+    public function clean(): void
+    {
+        File::delete($this->getAll());
+    }
 }

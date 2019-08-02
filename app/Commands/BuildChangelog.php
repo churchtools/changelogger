@@ -48,7 +48,7 @@ class BuildChangelog extends Command
      */
     public function handle()
     {
-        if ($this->dir->hasChanges()) {
+        if ( ! $this->dir->hasChanges()) {
             $this->build('No changes.');
             exit();
         }
@@ -63,7 +63,7 @@ class BuildChangelog extends Command
 
         $this->info("Changelog for {$this->argument('tag')} created");
         $this->task('Clean unreleased changes', function () {
-            $this->call('clean', ['--quite']);
+            $this->dir->clean();
         });
     }
 
