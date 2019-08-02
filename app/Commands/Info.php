@@ -29,13 +29,9 @@ class Info extends Command
      */
     public function handle()
     {
-        App::setLocale('de');
-        echo __('welcome');
-        echo "\n\n";
-        $this->alert('Changeloger');
-
+        $version = App::version();
+        $this->alert("Changeloger - $version");
         $this->line("Changeloger is a simple CLI tool to help you creating new consistent changelog entries.\n");
-
         $this->info('For more information what a changelog is and why you need one, see: <comment>https://keepachangelog.com</comment>');
     }
 
