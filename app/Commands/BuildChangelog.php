@@ -85,7 +85,7 @@ class BuildChangelog extends Command
         }
 
         $content = <<<CONTENT
-<!-- CHANGELOGER -->
+<!-- CHANGELOGGER -->
 
 ## [$tag] - $today
 
@@ -93,7 +93,7 @@ $string
 CONTENT;
 
         if (isset($fileContent)) {
-            $content = preg_replace('/<!-- CHANGELOGER -->/', $content, $fileContent);
+            $content = preg_replace('/<!-- CHANGELOGGER -->/', $content, $fileContent);
         }
 
         File::put(getcwd() . '/CHANGELOG.md', $content);

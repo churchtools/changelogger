@@ -20,7 +20,7 @@ class Info extends Command
      *
      * @var string
      */
-    protected $description = 'Information about changeloger';
+    protected $description = 'Information about changelogger';
 
     /**
      * Execute the console command.
@@ -30,8 +30,8 @@ class Info extends Command
     public function handle()
     {
         $version = App::version();
-        $this->alert("Changeloger - $version");
-        $this->line("Changeloger is a simple CLI tool to help you creating new consistent changelog entries.\n");
+        $this->alert("Changelogger - $version");
+        $this->line("Changelogger is a simple CLI tool to help you creating new consistent changelog entries.\n");
         $this->info('For more information what a changelog is and why you need one, see: <comment>https://keepachangelog.com</comment>');
     }
 

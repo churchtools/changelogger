@@ -1,4 +1,4 @@
-# Changeloger
+# Changelogger
 
 ![Changelogger Banner](./assets/banner.png)
 
@@ -8,7 +8,7 @@
   <a href="https://packagist.org/packages/churchtools/changelogger"><img src="https://poser.pugx.org/churchtools/changelogger/license.svg?format=flat-square" alt="License"></a>
 </p>
 
-**Changelogger is a CLI tool to help you creating better changelogs**
+**Changeloggger is a CLI tool to help you creating better changelogs**
 
 At ChurchTools we develop a SaaS. To keep our users informed, we write changelogs for every version. We used to add our changelogs to the issue, but many times the changelog is forgotten to add and manually copy'n'paste is a tedious work. This tool helps us to write and create consistent changelogs, which are committable so the reviewer can check it before merging.
 
