@@ -6,12 +6,14 @@ use Illuminate\Support\Facades\File;
 
 class ChangesDirectory
 {
+
     /**
      * Path to changelog directory
      *
      * @var string
      */
     protected $path;
+
 
     /**
      * ChangesDirectory constructor.
@@ -35,13 +37,13 @@ class ChangesDirectory
 
 
     /**
-     * Get path to unreleased changes directory.
+     * Check if any unreleased changes exists.
      *
-     * @return string
+     * @return bool
      */
-    public function getPath(): string
+    public function hasChanges() : bool
     {
-        return $this->path;
+        return ! empty($this->getAll());
     }
 
 
@@ -57,13 +59,13 @@ class ChangesDirectory
 
 
     /**
-     * Check if any unreleased changes exists.
+     * Get path to unreleased changes directory.
      *
-     * @return bool
+     * @return string
      */
-    public function hasChanges() : bool
+    public function getPath() : string
     {
-        return ! empty($this->getAll());
+        return $this->path;
     }
 
 
@@ -72,8 +74,22 @@ class ChangesDirectory
      *
      * Remove all unreleased changes.
      */
-    public function clean(): void
+    public function clean() : void
     {
         File::delete($this->getAll());
+    }
+
+
+    /**
+     * Save log entry to unreleased changes on disk.
+     *
+     * @param LogEntry $logEntry
+     * @param string   $filename
+     *
+     * @return bool
+     */
+    public function add(LogEntry $logEntry, string $filename) : bool
+    {
+        return File::put($this->getPath() . "/$filename", $logEntry->toYaml());
     }
 }

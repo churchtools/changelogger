@@ -6,7 +6,6 @@ use App\ChangesDirectory;
 use App\LogEntry;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
-use Symfony\Component\Yaml\Yaml;
 
 class AddChangelog extends Command
 {
@@ -87,21 +86,17 @@ class AddChangelog extends Command
             $title = $this->ask('Your changelog');
         }
 
-        $content = [
-            'title'  => $title,
-            'type'   => $type,
-            'author' => $author,
-        ];
+        $logEntry = new LogEntry($title, $type, $author);
 
         if ( ! $this->option('dry-run')) {
-            File::put($this->dir->getPath() . "/$filename", Yaml::dump($content));
-            $this->task("Saving Changelog changelogs/unreleased/$filename", function () {
-                return true;
-            });
+            $this->task("Saving Changelog changelogs/unreleased/$filename",
+                function () use ($logEntry, $filename) {
+                    return $this->dir->add($logEntry, $filename);
+                });
         }
 
         $this->info('Changelog generated:');
-        $this->line(Yaml::dump($content));
+        $this->line($logEntry->toYaml());
     }
 
 
