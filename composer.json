@@ -4,7 +4,7 @@
     "keywords": ["churchtools", "changelog", "console", "cli"],
     "homepage": "https://github.com/churchtools/changelogger",
     "type": "project",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "support": {
         "issues": "https://github.com/churchtools/changelogger/issues",
         "source": "https://github.com/churchtools/changelogger"
