@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
 
 class LogEntry
@@ -41,7 +42,7 @@ class LogEntry
      *
      * @return LogEntry
      */
-    public static function parse(\SplFileInfo $file) : self
+    public static function parse(SplFileInfo $file) : self
     {
         $content = Yaml::parse($file->getContents());
 
