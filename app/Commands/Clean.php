@@ -2,18 +2,18 @@
 
 namespace App\Commands;
 
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Support\Facades\File;
+use App\ChangesDirectory;
 use LaravelZero\Framework\Commands\Command;
 
 class Clean extends Command
 {
+
     /**
      * The signature of the command.
      *
      * @var string
      */
-    protected $signature = 'clean';
+    protected $signature = 'clean {--f|force : Force removing files}';
 
     /**
      * The description of the command.
@@ -22,22 +22,21 @@ class Clean extends Command
      */
     protected $description = 'Remove all unreleased logs';
 
-    /**
-     * Path to changelog directory
-     *
-     * @var string
-     */
-    protected $path;
+    /** @var ChangesDirectory */
+    protected $dir;
 
 
     /**
      * Clean constructor.
+     *
+     * @param ChangesDirectory $dir
      */
-    public function __construct()
+    public function __construct(ChangesDirectory $dir)
     {
         parent::__construct();
-        $this->path = getcwd() . '/changelogs/unreleased';
+        $this->dir = $dir;
     }
+
 
     /**
      * Execute the console command.
@@ -46,29 +45,21 @@ class Clean extends Command
      */
     public function handle()
     {
-        $this->initFolder();
-        $allFiles = File::allFiles($this->path);
-
-        if (empty($allFiles)) {
+        if ($this->dir->hasChanges()) {
             $this->info("No logs. Nothing to delete.");
+
             return;
         }
 
-        $files = count($allFiles) === 1 ? '1 file' : count($allFiles) . ' files';
-        $shouldDelete = $this->confirm("Do you want to delete {$files}?");
+        $allFiles     = $this->dir->getAll();
+        $files        = count($allFiles) === 1 ? '1 file' : count($allFiles) . ' files';
+        $shouldDelete = $this->option('force') ?? $this->confirm("Do you want to delete {$files}?");
 
         if ($shouldDelete) {
-            File::delete($allFiles);
+            $this->dir->clean();
             $this->task("Delete {$files}", function () {
                 return true;
             });
-        }
-    }
-
-    private function initFolder() : void
-    {
-        if ( ! File::exists($this->path)) {
-            File::makeDirectory($this->path, 0755, true);
         }
     }
 }

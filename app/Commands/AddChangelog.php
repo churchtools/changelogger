@@ -2,10 +2,11 @@
 
 namespace App\Commands;
 
+use App\ChangesDirectory;
 use App\LogEntry;
+use App\Types;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
-use Symfony\Component\Yaml\Yaml;
 
 class AddChangelog extends Command
 {
@@ -30,32 +31,24 @@ class AddChangelog extends Command
      */
     protected $description = 'Create a new changelog';
 
+    /** @var ChangesDirectory */
+    private $dir;
+
+    /** @var Types */
+    private $types;
+
+
     /**
-     * Path to changelog directory
+     * AddChangelog constructor.
      *
-     * @var string
+     * @param ChangesDirectory $dir
+     * @param Types            $types
      */
-    protected $path;
-
-    protected $types = [
-        'New feature'             => 'added',
-        'Bug fix'                 => 'fixed',
-        'Feature change'          => 'changed',
-        'New deprecation'         => 'deprecated',
-        'Feature removal'         => 'removed',
-        'Security fix'            => 'security',
-        'Performance improvement' => 'performance',
-        'Other'                   => 'other',
-    ];
-
-
-    /**
-     * MakeChangelog constructor.
-     */
-    public function __construct()
+    public function __construct(ChangesDirectory $dir, Types $types)
     {
         parent::__construct();
-        $this->path = getcwd() . '/changelogs/unreleased';
+        $this->dir = $dir;
+        $this->types = $types;
     }
 
 
@@ -66,10 +59,8 @@ class AddChangelog extends Command
      */
     public function handle()
     {
-        $this->initFolder();
         $title = $this->option('message');
         $type  = $this->option('type');
-        $this->validateType($type);
         $filename = $this->getFilename();
         $author   = $this->getAuthor();
         $empty    = $this->option('empty');
@@ -81,51 +72,32 @@ class AddChangelog extends Command
         }
 
         if ($type === null) {
-            $type = $this->choice('Type of change', array_keys($this->types));
-            $type = $this->types[$type];
+            $type = $this->choice('Type of change', $this->types->keys());
+            $type = $this->types->getName($type);
+        }
+
+        try {
+            $this->types->validate($type);
+        } catch (\RuntimeException $e) {
+            $this->error($e->getMessage());
+            return;
         }
 
         while (empty($title)) {
             $title = $this->ask('Your changelog');
         }
 
-        $content = [
-            'title'  => $title,
-            'type'   => $type,
-            'author' => $author,
-        ];
+        $logEntry = new LogEntry($title, $type, $author);
 
         if ( ! $this->option('dry-run')) {
-            File::put($this->path . "/$filename", Yaml::dump($content));
-            $this->task("Saving Changelog changelogs/unreleased/$filename", function () {
-                return true;
-            });
+            $this->task("Saving Changelog changelogs/unreleased/$filename",
+                function () use ($logEntry, $filename) {
+                    return $this->dir->add($logEntry, $filename);
+                });
         }
 
         $this->info('Changelog generated:');
-        $this->line(Yaml::dump($content));
-    }
-
-
-    private function initFolder() : void
-    {
-        if ( ! File::exists($this->path)) {
-            File::makeDirectory($this->path, 0755, true);
-        }
-    }
-
-
-    private function validateType(?string $type) : void
-    {
-        if ($type === null) {
-            return;
-        }
-
-        if ( ! in_array($type, array_values($this->types), true)) {
-            $this->error('No valid type. Use one of the following:');
-            $this->line(implode(", ", array_values($this->types)));
-            die();
-        }
+        $this->line($logEntry->toYaml());
     }
 
 
@@ -146,7 +118,7 @@ class AddChangelog extends Command
 
         $filename .= '.yml';
 
-        if (File::exists($this->path . "/$filename") && ! $this->option('force')) {
+        if (File::exists($this->dir->getPath() . "/$filename") && ! $this->option('force')) {
             $this->error('Changelog already exists. If you want to override the changelog use --force');
             die();
         }

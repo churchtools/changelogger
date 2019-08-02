@@ -2,12 +2,13 @@
 
 namespace App\Commands;
 
+use App\ChangesDirectory;
+use App\LogEntry;
 use App\Types;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
-use Symfony\Component\Yaml\Yaml;
 
 class BuildChangelog extends Command
 {
@@ -26,21 +27,24 @@ class BuildChangelog extends Command
      */
     protected $description = 'Build new changelog from unreleased logs';
 
-    /**
-     * Path to changelog directory
-     *
-     * @var string
-     */
-    protected $path;
+    /** @var ChangesDirectory */
+    private $dir;
+
+    /** @var Types */
+    private $types;
 
 
     /**
      * BuildChangelog constructor.
+     *
+     * @param ChangesDirectory $dir
+     * @param Types            $types
      */
-    public function __construct()
+    public function __construct(ChangesDirectory $dir, Types $types)
     {
         parent::__construct();
-        $this->path = getcwd() . '/changelogs/unreleased';
+        $this->dir   = $dir;
+        $this->types = $types;
     }
 
 
@@ -51,32 +55,23 @@ class BuildChangelog extends Command
      */
     public function handle()
     {
-        $this->initFolder();
-        $allFiles = File::allFiles($this->path);
-
-        if (empty($allFiles)) {
+        if ( ! $this->dir->hasChanges()) {
             $this->build('No changes.');
             exit();
         }
 
         $changes = collect();
-        foreach ($allFiles as $file) {
-            $changes->push(Yaml::parse($file->getContents()));
+        foreach ($this->dir->getAll() as $file) {
+            $changes->push(LogEntry::parse($file));
         }
 
         $content = $this->generateContent($changes);
         $this->build($content);
 
         $this->info("Changelog for {$this->argument('tag')} created");
-        File::delete($allFiles);
-    }
-
-
-    private function initFolder() : void
-    {
-        if ( ! File::exists($this->path)) {
-            File::makeDirectory($this->path, 0755, true);
-        }
+        $this->task('Clean unreleased changes', function () {
+            $this->dir->clean();
+        });
     }
 
 
@@ -107,21 +102,23 @@ CONTENT;
 
     private function generateContent(Collection $changes) : string
     {
-        $changes = $changes->groupBy('type')->filter(function (Collection $logType, $key) {
+        $changes = $changes->groupBy(function (LogEntry $logEntry) {
+            return $logEntry->type();
+        })->filter(function (Collection $logType, $key) {
             return $key !== 'ignore';
-        });
+        })->sort();
 
         return $changes->map(function (Collection $logType, $key) {
-            $header  = Types::getName($key);
+            $header  = $this->types->getName($key);
             $count   = $logType->count();
             $changes = sprintf('%d %s', $count, $count === 1 ? 'change' : 'changes');
             $content = "### {$header} ({$changes})\n\n";
 
-            $content .= $logType->map(function (array $log) {
-                $changeEntry = "* {$log['title']}";
+            $content .= $logType->map(function (LogEntry $log) {
+                $changeEntry = "* {$log->title()}";
 
-                if ( ! empty($log['author'])) {
-                    $changeEntry .= " (props {$log['author']})";
+                if ( ! empty($log->author())) {
+                    $changeEntry .= " (props {$log->author()})";
                 }
 
                 return $changeEntry;
