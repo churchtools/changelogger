@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use App\ChangesDirectory;
 use App\LogEntry;
+use App\Types;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 
@@ -30,30 +31,24 @@ class AddChangelog extends Command
      */
     protected $description = 'Create a new changelog';
 
-    private $types = [
-        'New feature'             => 'added',
-        'Bug fix'                 => 'fixed',
-        'Feature change'          => 'changed',
-        'New deprecation'         => 'deprecated',
-        'Feature removal'         => 'removed',
-        'Security fix'            => 'security',
-        'Performance improvement' => 'performance',
-        'Other'                   => 'other',
-    ];
-
     /** @var ChangesDirectory */
     private $dir;
+
+    /** @var Types */
+    private $types;
 
 
     /**
      * AddChangelog constructor.
      *
      * @param ChangesDirectory $dir
+     * @param Types            $types
      */
-    public function __construct(ChangesDirectory $dir)
+    public function __construct(ChangesDirectory $dir, Types $types)
     {
         parent::__construct();
         $this->dir = $dir;
+        $this->types = $types;
     }
 
 
@@ -66,7 +61,6 @@ class AddChangelog extends Command
     {
         $title = $this->option('message');
         $type  = $this->option('type');
-        $this->validateType($type);
         $filename = $this->getFilename();
         $author   = $this->getAuthor();
         $empty    = $this->option('empty');
@@ -78,8 +72,15 @@ class AddChangelog extends Command
         }
 
         if ($type === null) {
-            $type = $this->choice('Type of change', array_keys($this->types));
-            $type = $this->types[$type];
+            $type = $this->choice('Type of change', $this->types->keys());
+            $type = $this->types->getName($type);
+        }
+
+        try {
+            $this->types->validate($type);
+        } catch (\RuntimeException $e) {
+            $this->error($e->getMessage());
+            return;
         }
 
         while (empty($title)) {
@@ -97,20 +98,6 @@ class AddChangelog extends Command
 
         $this->info('Changelog generated:');
         $this->line($logEntry->toYaml());
-    }
-
-
-    private function validateType(?string $type) : void
-    {
-        if ($type === null) {
-            return;
-        }
-
-        if ( ! in_array($type, array_values($this->types), true)) {
-            $this->error('No valid type. Use one of the following:');
-            $this->line(implode(", ", array_values($this->types)));
-            die();
-        }
     }
 
 

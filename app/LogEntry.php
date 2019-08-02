@@ -29,8 +29,23 @@ class LogEntry
     public function __construct(string $title, string $type, string $author)
     {
         $this->title  = $title;
-        $this->author = $author;
         $this->type   = $type;
+        $this->author = $author;
+    }
+
+
+    /**
+     * Create new LogEntry object from a YAML file.
+     *
+     * @param $file
+     *
+     * @return LogEntry
+     */
+    public static function parse(\SplFileInfo $file) : self
+    {
+        $content = Yaml::parse($file->getContents());
+
+        return new self($content['title'], $content['type'], $content['author']);
     }
 
 
@@ -57,6 +72,39 @@ class LogEntry
             'type'   => $this->type,
             'author' => $this->author,
         ];
+    }
+
+
+    /**
+     * Get Title.
+     *
+     * @return string
+     */
+    public function title() : string
+    {
+        return $this->title;
+    }
+
+
+    /**
+     * Get Type.
+     *
+     * @return string
+     */
+    public function type() : string
+    {
+        return $this->type;
+    }
+
+
+    /**
+     * Get Author.
+     *
+     * @return string
+     */
+    public function author() : string
+    {
+        return $this->author;
     }
 
 }
