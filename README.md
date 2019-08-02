@@ -14,6 +14,16 @@ At ChurchTools we develop a SaaS. To keep our users informed, we write changelog
 
 ---
 
+## What does it do?
+
+_Changelogger_ saves each log entry as a YAML file in `changelogs/unreleased`. During the development process many files from different features, bug fixes, and so find their way into this folder.
+
+We create for each change a different file to easily track them. Adding them to a single file, like `Changelog.md` directly could lead to nasty merge conflicts. One file per change avoids that.
+
+In the end, if a new version is built. _Changelogger_ takes all unreleased changes, sorts them and added a new release to `CHANGELOG.md`. After that all files in `changelogs/unreleased` are delete and your project is ready for the next version.
+
+**Changelogger is not taking your git-logs.** There exists many tools already, which take your git-log and converts commit messages to changelog entries. IMHO, this leads in many cases to bad changelogs. Commit messages are not changelogs. They are pieces of information for developers and not the users. Our changelogs are handcraftet because non-developer aka our users, should be able to understand the change.
+
 ## Installation
 
 This package requires PHP 7.1.3.
