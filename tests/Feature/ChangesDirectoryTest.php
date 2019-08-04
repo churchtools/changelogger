@@ -65,12 +65,4 @@ class ChangesDirectoryTest extends TestCase
         $this->path = config('changelogger.unreleased');
         $this->sut  = new ChangesDirectory();
     }
-
-
-    protected function tearDown() : void
-    {
-        File::deleteDirectories(config('changelogger.directory'));
-        File::deleteDirectory(config('changelogger.directory'));
-        parent::tearDown();
-    }
 }
