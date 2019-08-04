@@ -16,14 +16,14 @@ type: added
 author: ''
 
 EMPTY;
-        $this->artisan('add')
+        $this->artisan('add', ['--file' => 'newLog'])
             ->expectsQuestion('Type of change', 'New feature')
             ->expectsQuestion('Your changelog', 'Test log')
             ->expectsOutput('Changelog generated:')
             ->assertExitCode(0);
 
-        $this->assertCommandCalled('add');
-        $log = config('changelogger.unreleased') . '/9-test.yml';
+        $this->assertCommandCalled('add', ['--file' => 'newLog']);
+        $log = config('changelogger.unreleased') . '/newLog.yml';
         $this->assertFileExists($log);
         $content = File::get($log);
         $this->assertEquals($expected, $content);
@@ -39,12 +39,12 @@ author: ''
 
 EMPTY;
 
-        $this->artisan('add', ['--empty' => true])
+        $this->artisan('add', ['--empty' => true, '--file' => 'empty'])
             ->expectsOutput('Changelog generated:')
             ->assertExitCode(0);
 
-        $this->assertCommandCalled('add', ['--empty' => true]);
-        $log = config('changelogger.unreleased') . '/9-test.yml';
+        $this->assertCommandCalled('add', ['--empty' => true, '--file' => 'empty']);
+        $log = config('changelogger.unreleased') . '/empty.yml';
         $this->assertFileExists($log);
         $content = File::get($log);
         $this->assertEquals($expected, $content);

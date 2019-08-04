@@ -25,11 +25,18 @@ class Types
      *
      * @return string|null
      */
-    public function getName(string $key) : ?string
+    public function getValue(string $key) : ?string
     {
         return collect($this->types)->get($key);
     }
 
+
+    public function getName(string $key) : ?string
+    {
+        return collect($this->types)->filter(function ($type) use ($key) {
+            return $type === $key;
+        })->keys()->first();
+    }
 
     /**
      * Validate type if it is a valid type.

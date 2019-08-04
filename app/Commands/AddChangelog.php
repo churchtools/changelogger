@@ -23,6 +23,7 @@ class AddChangelog extends Command
                             {--t|type= : Type of changelog}
                             {--u|user : Use git user.name as author}
                             {--m|message= : Changelog entry}
+                            {--i|file : Filename, default is branch name}
                             {--empty : Add empty log}';
 
     /**
@@ -69,16 +70,16 @@ class AddChangelog extends Command
 
         if ($empty) {
             $title  = LogEntry::EMPTY;
-            $type   = 'No Changelog';
+            $type   = 'ignore';
             $author = '';
         }
 
         if ($type === null) {
             $type = $this->choice('Type of change', $this->types->keys());
+            $type = $this->types->getValue($type);
         }
 
         try {
-            $type = $this->types->getName($type);
             $this->types->validate($type);
         } catch (RuntimeException $e) {
             $this->error($e->getMessage());
@@ -111,12 +112,17 @@ class AddChangelog extends Command
      */
     private function getFilename() : string
     {
-        exec('git branch --show-current', $branch, $returnVar);
+        $filename = $this->option('file');
 
-        if ($returnVar !== 0) {
-            $filename = $this->ask("Filename");
-        } else {
-            $filename = preg_replace('/\//', '-', $branch[0]);
+
+        if (! $filename) {
+            exec('git branch --show-current', $branch, $returnVar);
+
+            if ($returnVar !== 0) {
+                $filename = $this->ask("Filename");
+            } else {
+                $filename = preg_replace('/\//', '-', $branch[0]);
+            }
         }
 
         $filename .= '.yml';
