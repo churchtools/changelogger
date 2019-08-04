@@ -7,6 +7,7 @@ use App\LogEntry;
 use App\Types;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
+use RuntimeException;
 
 class AddChangelog extends Command
 {
@@ -68,18 +69,18 @@ class AddChangelog extends Command
 
         if ($empty) {
             $title  = LogEntry::EMPTY;
-            $type   = 'ignore';
+            $type   = 'No Changelog';
             $author = '';
         }
 
         if ($type === null) {
             $type = $this->choice('Type of change', $this->types->keys());
-            $type = $this->types->getName($type);
         }
 
         try {
+            $type = $this->types->getName($type);
             $this->types->validate($type);
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->error($e->getMessage());
             return;
         }
@@ -91,9 +92,10 @@ class AddChangelog extends Command
         $logEntry = new LogEntry($title, $type, $author);
 
         if ( ! $this->option('dry-run')) {
+            $this->dir->add($logEntry, $filename);
             $this->task("Saving Changelog changelogs/unreleased/$filename",
-                function () use ($logEntry, $filename) {
-                    return $this->dir->add($logEntry, $filename);
+                function () {
+                    return true;
                 });
         }
 
@@ -119,9 +121,9 @@ class AddChangelog extends Command
 
         $filename .= '.yml';
 
-        if (File::exists($this->dir->getPath() . "/$filename") && ! $this->option('force')) {
+        if ( ! $this->option('force') && File::exists($this->dir->getPath() . "/$filename")) {
             $this->error('Changelog already exists. If you want to override the changelog use --force');
-            die();
+            exit(1);
         }
 
         return $filename;

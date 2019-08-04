@@ -26,7 +26,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @return bool
      */
-    private static function deleteDirectory($dirname) : bool
+    public static function deleteDirectory($dirname) : bool
     {
         $dirHandle = false;
         if (is_dir($dirname)) {
