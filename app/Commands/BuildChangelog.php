@@ -44,6 +44,7 @@ class BuildChangelog extends Command
     {
         parent::__construct();
         $this->dir   = $dir;
+        $this->dir->init();
         $this->types = $types;
     }
 
@@ -57,7 +58,8 @@ class BuildChangelog extends Command
     {
         if ( ! $this->dir->hasChanges()) {
             $this->build('No changes.');
-            exit();
+            $this->info("Changelog for {$this->argument('tag')} created");
+           return;
         }
 
         $changes = collect();
@@ -80,8 +82,8 @@ class BuildChangelog extends Command
         $tag   = $this->argument('tag');
         $today = Carbon::now()->format('Y-m-d');
 
-        if (File::exists(getcwd() . '/CHANGELOG.md')) {
-            $fileContent = File::get(getcwd() . '/CHANGELOG.md');
+        if (File::exists(config('changelogger.directory') . '/CHANGELOG.md')) {
+            $fileContent = File::get(config('changelogger.directory') . '/CHANGELOG.md');
         }
 
         $content = <<<CONTENT
@@ -96,7 +98,7 @@ CONTENT;
             $content = preg_replace('/<!-- CHANGELOGGER -->/', $content, $fileContent);
         }
 
-        File::put(getcwd() . '/CHANGELOG.md', $content);
+        File::put(config('changelogger.directory') . '/CHANGELOG.md', $content);
     }
 
 
@@ -115,7 +117,7 @@ CONTENT;
             $content = "### {$header} ({$changes})\n\n";
 
             $content .= $logType->map(function (LogEntry $log) {
-                $changeEntry = "* {$log->title()}";
+                $changeEntry = "- {$log->title()}";
 
                 if ( ! empty($log->author())) {
                     $changeEntry .= " (props {$log->author()})";

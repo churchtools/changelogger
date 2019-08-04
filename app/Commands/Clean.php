@@ -35,6 +35,7 @@ class Clean extends Command
     {
         parent::__construct();
         $this->dir = $dir;
+        $this->dir->init();
     }
 
 
@@ -45,7 +46,7 @@ class Clean extends Command
      */
     public function handle()
     {
-        if ($this->dir->hasChanges()) {
+        if (! $this->dir->hasChanges()) {
             $this->info("No logs. Nothing to delete.");
 
             return;
@@ -53,7 +54,8 @@ class Clean extends Command
 
         $allFiles     = $this->dir->getAll();
         $files        = count($allFiles) === 1 ? '1 file' : count($allFiles) . ' files';
-        $shouldDelete = $this->option('force') ?? $this->confirm("Do you want to delete {$files}?");
+
+        $shouldDelete = $this->option('force') ? true : $this->confirm("Do you want to delete {$files}?");
 
         if ($shouldDelete) {
             $this->dir->clean();

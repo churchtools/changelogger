@@ -14,6 +14,7 @@ class Types
         'Security fix'            => 'security',
         'Performance improvement' => 'performance',
         'Other'                   => 'other',
+        'No Changelog'            => 'ignore',
     ];
 
 
@@ -22,15 +23,20 @@ class Types
      *
      * @param string $key
      *
-     * @return string
+     * @return string|null
      */
-    public function getName(string $key) : string
+    public function getValue(string $key) : ?string
+    {
+        return collect($this->types)->get($key);
+    }
+
+
+    public function getName(string $key) : ?string
     {
         return collect($this->types)->filter(function ($type) use ($key) {
             return $type === $key;
         })->keys()->first();
     }
-
 
     /**
      * Validate type if it is a valid type.

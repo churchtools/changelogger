@@ -7,6 +7,7 @@ use App\LogEntry;
 use App\Types;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
+use RuntimeException;
 
 class AddChangelog extends Command
 {
@@ -22,6 +23,7 @@ class AddChangelog extends Command
                             {--t|type= : Type of changelog}
                             {--u|user : Use git user.name as author}
                             {--m|message= : Changelog entry}
+                            {--i|file : Filename, default is branch name}
                             {--empty : Add empty log}';
 
     /**
@@ -48,6 +50,7 @@ class AddChangelog extends Command
     {
         parent::__construct();
         $this->dir = $dir;
+        $this->dir->init();
         $this->types = $types;
     }
 
@@ -73,12 +76,12 @@ class AddChangelog extends Command
 
         if ($type === null) {
             $type = $this->choice('Type of change', $this->types->keys());
-            $type = $this->types->getName($type);
+            $type = $this->types->getValue($type);
         }
 
         try {
             $this->types->validate($type);
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->error($e->getMessage());
             return;
         }
@@ -90,9 +93,10 @@ class AddChangelog extends Command
         $logEntry = new LogEntry($title, $type, $author);
 
         if ( ! $this->option('dry-run')) {
+            $this->dir->add($logEntry, $filename);
             $this->task("Saving Changelog changelogs/unreleased/$filename",
-                function () use ($logEntry, $filename) {
-                    return $this->dir->add($logEntry, $filename);
+                function () {
+                    return true;
                 });
         }
 
@@ -108,19 +112,24 @@ class AddChangelog extends Command
      */
     private function getFilename() : string
     {
-        exec('git branch --show-current', $branch, $returnVar);
+        $filename = $this->option('file');
 
-        if ($returnVar !== 0) {
-            $filename = $this->ask("Filename");
-        } else {
-            $filename = preg_replace('/\//', '-', $branch[0]);
+
+        if (! $filename) {
+            exec('git branch --show-current', $branch, $returnVar);
+
+            if ($returnVar !== 0) {
+                $filename = $this->ask("Filename");
+            } else {
+                $filename = preg_replace('/\//', '-', $branch[0]);
+            }
         }
 
         $filename .= '.yml';
 
-        if (File::exists($this->dir->getPath() . "/$filename") && ! $this->option('force')) {
+        if ( ! $this->option('force') && File::exists($this->dir->getPath() . "/$filename")) {
             $this->error('Changelog already exists. If you want to override the changelog use --force');
-            die();
+            exit(1);
         }
 
         return $filename;

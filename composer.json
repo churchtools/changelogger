@@ -48,7 +48,8 @@
     "scripts": {
         "post-create-project-cmd": [
             "@php application app:rename"
-        ]
+        ],
+        "test": "phpunit --colors=always --testdox"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
