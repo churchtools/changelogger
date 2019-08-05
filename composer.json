@@ -1,7 +1,7 @@
 {
     "name": "churchtools/changelogger",
     "description": "CLI Tool for creating consistent and committable changelog entries.",
-    "keywords": ["churchtools", "changelog", "console", "cli"],
+    "keywords": ["churchtools", "changelog", "console", "cli", "keepachangelog"],
     "homepage": "https://github.com/churchtools/changelogger",
     "type": "project",
     "license": "Apache-2.0",
