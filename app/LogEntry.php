@@ -19,6 +19,9 @@ class LogEntry
     /** @var string */
     private $type;
 
+    /** @var string */
+    private $group;
+
 
     /**
      * LogEntry constructor.
@@ -26,12 +29,14 @@ class LogEntry
      * @param string $title
      * @param string $type
      * @param string $author
+     * @param string $group
      */
-    public function __construct(string $title, string $type, string $author)
+    public function __construct(string $title, string $type, string $author, string $group)
     {
         $this->title  = $title;
         $this->type   = $type;
         $this->author = $author;
+        $this->group  = $group;
     }
 
 
@@ -46,7 +51,11 @@ class LogEntry
     {
         $content = Yaml::parse($file->getContents());
 
-        return new self($content['title'], $content['type'], $content['author']);
+        if (! isset($content['group'])) {
+            $content['group'] = '';
+        }
+
+        return new self($content['title'], $content['type'], $content['author'], $content['group']);
     }
 
 
@@ -72,6 +81,7 @@ class LogEntry
             'title'  => $this->title,
             'type'   => $this->type,
             'author' => $this->author,
+            'group'  => $this->group,
         ];
     }
 
@@ -112,6 +122,12 @@ class LogEntry
     public function hasAuthor() : bool
     {
         return $this->author !== '';
+    }
+
+
+    public function group() : string
+    {
+        return $this->group;
     }
 
 }

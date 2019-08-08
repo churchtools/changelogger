@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\ChangeloggerConfig;
 use App\ChangesDirectory;
 use App\LogEntry;
 use App\Types;
@@ -21,6 +22,7 @@ class NewCommand extends Command
                             {--f|force : Override existing changelog if one exists with the same name}
                             {--dry-run : Don\'t actually write anything, just print.}
                             {--t|type= : Type of changelog}
+                            {--g|group= : Name of group, specified in config}
                             {--u|user : Use git user.name as author}
                             {--m|message= : Changelog entry}
                             {--i|file= : Filename, default is branch name}
@@ -39,19 +41,24 @@ class NewCommand extends Command
     /** @var Types */
     private $types;
 
+    /** @var ChangeloggerConfig */
+    private $config;
+
 
     /**
      * NewChangelog constructor.
      *
-     * @param ChangesDirectory $dir
-     * @param Types            $types
+     * @param ChangesDirectory   $dir
+     * @param Types              $types
+     * @param ChangeloggerConfig $config
      */
-    public function __construct(ChangesDirectory $dir, Types $types)
+    public function __construct(ChangesDirectory $dir, Types $types, ChangeloggerConfig $config)
     {
         parent::__construct();
         $this->dir = $dir;
         $this->dir->init();
-        $this->types = $types;
+        $this->types  = $types;
+        $this->config = $config;
     }
 
 
@@ -67,6 +74,7 @@ class NewCommand extends Command
         $filename = $this->getFilename();
         $author   = $this->getAuthor();
         $empty    = $this->option('empty');
+        $group    = (string) $this->option('group');
 
         if ($empty) {
             $title  = LogEntry::EMPTY;
@@ -79,23 +87,29 @@ class NewCommand extends Command
             $type = $this->types->getValue($type);
         }
 
+        if ($group === '' && $this->config->hasGroups()) {
+            $group = $this->choice('Group of change', $this->config->getGroups());
+        }
+
         try {
             $this->types->validate($type);
+            $this->config->validateGroup($group);
         } catch (RuntimeException $exception) {
             $this->error($exception->getMessage());
 
             return;
         }
 
+
         while ($title === '') {
             $title = $this->ask('Your changelog');
         }
 
-        $logEntry = new LogEntry($title, $type, $author);
+        $logEntry = new LogEntry($title, $type, $author, $group);
 
         if ( ! $this->option('dry-run')) {
             $this->dir->add($logEntry, $filename);
-            $this->task("Saving Changelog changelogs/unreleased/$filename", function () {
+            $this->task("Saving Changelog changelogs/unreleased/$filename", static function () {
                 return true;
             });
         }
