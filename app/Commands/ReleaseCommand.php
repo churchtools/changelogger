@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 
-class BuildChangelog extends Command
+class ReleaseCommand extends Command
 {
 
     /**
@@ -18,7 +18,7 @@ class BuildChangelog extends Command
      *
      * @var string
      */
-    protected $signature = 'build {tag : Version or tag name}';
+    protected $signature = 'release {tag : Version or tag name}';
 
     /**
      * The description of the command.

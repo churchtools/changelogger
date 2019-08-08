@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 use RuntimeException;
 
-class AddChangelog extends Command
+class NewCommand extends Command
 {
 
     /**
@@ -17,13 +17,13 @@ class AddChangelog extends Command
      *
      * @var string
      */
-    protected $signature = 'add 
+    protected $signature = 'new 
                             {--f|force : Override existing changelog if one exists with the same name}
                             {--dry-run : Don\'t actually write anything, just print.}
                             {--t|type= : Type of changelog}
                             {--u|user : Use git user.name as author}
                             {--m|message= : Changelog entry}
-                            {--i|file : Filename, default is branch name}
+                            {--i|file= : Filename, default is branch name}
                             {--empty : Add empty log}';
 
     /**
@@ -41,7 +41,7 @@ class AddChangelog extends Command
 
 
     /**
-     * AddChangelog constructor.
+     * NewChangelog constructor.
      *
      * @param ChangesDirectory $dir
      * @param Types            $types

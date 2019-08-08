@@ -8,7 +8,7 @@ use Tests\TestCase;
 /**
  * Class CleanTest
  * @package Tests\Feature\Commands
- * @covers \App\Commands\Clean
+ * @covers \App\Commands\CleanCommand
  */
 class CleanTest extends TestCase
 {

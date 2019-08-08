@@ -5,24 +5,24 @@ namespace Tests\Feature\Commands;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
-class AddChangelogTest extends TestCase
+class NewChangelogTest extends TestCase
 {
 
     public function testAddNewChangelog() : void
     {
-        $expected =<<<EMPTY
+        $expected = <<<EMPTY
 title: 'Test log'
 type: added
 author: ''
 
 EMPTY;
-        $this->artisan('add', ['--file' => 'newLog'])
+        $this->artisan('new', ['--file' => 'newLog'])
             ->expectsQuestion('Type of change', 'New feature')
             ->expectsQuestion('Your changelog', 'Test log')
             ->expectsOutput('Changelog generated:')
             ->assertExitCode(0);
 
-        $this->assertCommandCalled('add', ['--file' => 'newLog']);
+        $this->assertCommandCalled('new', ['--file' => 'newLog']);
         $log = config('changelogger.unreleased') . '/newLog.yml';
         $this->assertFileExists($log);
         $content = File::get($log);
@@ -30,20 +30,21 @@ EMPTY;
         File::delete($log);
     }
 
+
     public function testAddEmptyChangelog() : void
     {
-        $expected =<<<EMPTY
+        $expected = <<<EMPTY
 title: 'No changelog necessary'
 type: ignore
 author: ''
 
 EMPTY;
 
-        $this->artisan('add', ['--empty' => true, '--file' => 'empty'])
+        $this->artisan('new', ['--empty' => true, '--file' => 'empty'])
             ->expectsOutput('Changelog generated:')
             ->assertExitCode(0);
 
-        $this->assertCommandCalled('add', ['--empty' => true, '--file' => 'empty']);
+        $this->assertCommandCalled('new', ['--empty' => true, '--file' => 'empty']);
         $log = config('changelogger.unreleased') . '/empty.yml';
         $this->assertFileExists($log);
         $content = File::get($log);
@@ -52,9 +53,9 @@ EMPTY;
     }
 
 
-    public function testInvalidTypeExpectsException(): void
+    public function testInvalidTypeExpectsException() : void
     {
-        $this->artisan('add', ['--type' => 'invalid'])
+        $this->artisan('new', ['--type' => 'invalid'])
             ->expectsOutput('No valid type. Use one of the following: added, fixed, changed, deprecated, removed, security, performance, other, ignore')
             ->assertExitCode(0);
     }

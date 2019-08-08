@@ -5,7 +5,7 @@ namespace App\Commands;
 use App\ChangesDirectory;
 use LaravelZero\Framework\Commands\Command;
 
-class Clean extends Command
+class CleanCommand extends Command
 {
 
     /**
