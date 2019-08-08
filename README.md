@@ -42,12 +42,12 @@ composer global require churchtools/changelogger
 ## Usage
 
 ```bash
-# To add a new changelog use `add`
-changelogger add
+# To add a new changelog use `new`
+changelogger new
 
-# When a new version is release run `build` to generate the changelog.
+# When a new version is release run `release` to generate the changelog.
 # The <tag> is the version number or build number of the release.
-changelogger build <tag>
+changelogger release <tag>
 
 # Need to start over? Run `clean` to remove all unreleased logs.
 changelogger clean
