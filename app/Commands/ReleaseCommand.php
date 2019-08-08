@@ -104,9 +104,9 @@ CONTENT;
 
     private function generateContent(Collection $changes) : string
     {
-        $changes = $changes->groupBy(function (LogEntry $logEntry) {
+        $changes = $changes->groupBy(static function (LogEntry $logEntry) {
             return $logEntry->type();
-        })->filter(function (Collection $logType, $key) {
+        })->filter(static function (Collection $logType, $key) {
             return $key !== 'ignore';
         })->sort();
 
@@ -116,10 +116,10 @@ CONTENT;
             $changes = sprintf('%d %s', $count, $count === 1 ? 'change' : 'changes');
             $content = "### {$header} ({$changes})\n\n";
 
-            $content .= $logType->map(function (LogEntry $log) {
+            $content .= $logType->map(static function (LogEntry $log) {
                 $changeEntry = "- {$log->title()}";
 
-                if ( ! empty($log->author())) {
+                if ( $log->hasAuthor()) {
                     $changeEntry .= " (props {$log->author()})";
                 }
 

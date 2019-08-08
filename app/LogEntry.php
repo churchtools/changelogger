@@ -108,4 +108,10 @@ class LogEntry
         return $this->author;
     }
 
+
+    public function hasAuthor() : bool
+    {
+        return $this->author !== '';
+    }
+
 }

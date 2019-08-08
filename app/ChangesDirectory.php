@@ -18,11 +18,11 @@ class ChangesDirectory
     /**
      * ChangesDirectory constructor.
      *
-     * @param string|null $path
+     * @param string $path
      */
-    public function __construct()
+    public function __construct(string $path)
     {
-        $this->path = config('changelogger.unreleased');
+        $this->path = $path;
     }
 
 
@@ -44,14 +44,14 @@ class ChangesDirectory
      */
     public function hasChanges() : bool
     {
-        return ! empty($this->getAll());
+        return count($this->getAll()) > 0;
     }
 
 
     /**
      * Get all files of unreleased changes.
      *
-     * @return \SplFileInfo[]
+     * @return array<\SplFileInfo>
      */
     public function getAll() : array
     {

@@ -62,8 +62,8 @@ class NewCommand extends Command
      */
     public function handle()
     {
-        $title = $this->option('message');
-        $type  = $this->option('type');
+        $title    = (string) $this->option('message');
+        $type     = $this->option('type');
         $filename = $this->getFilename();
         $author   = $this->getAuthor();
         $empty    = $this->option('empty');
@@ -81,12 +81,13 @@ class NewCommand extends Command
 
         try {
             $this->types->validate($type);
-        } catch (RuntimeException $e) {
-            $this->error($e->getMessage());
+        } catch (RuntimeException $exception) {
+            $this->error($exception->getMessage());
+
             return;
         }
 
-        while (empty($title)) {
+        while ($title === '') {
             $title = $this->ask('Your changelog');
         }
 
@@ -94,10 +95,9 @@ class NewCommand extends Command
 
         if ( ! $this->option('dry-run')) {
             $this->dir->add($logEntry, $filename);
-            $this->task("Saving Changelog changelogs/unreleased/$filename",
-                function () {
-                    return true;
-                });
+            $this->task("Saving Changelog changelogs/unreleased/$filename", function () {
+                return true;
+            });
         }
 
         $this->info('Changelog generated:');
@@ -114,8 +114,7 @@ class NewCommand extends Command
     {
         $filename = $this->option('file');
 
-
-        if (! $filename) {
+        if ( ! $filename) {
             exec('git branch --show-current', $branch, $returnVar);
 
             if ($returnVar !== 0) {

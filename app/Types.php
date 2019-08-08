@@ -2,6 +2,8 @@
 
 namespace App;
 
+use RuntimeException;
+
 class Types
 {
 
@@ -33,23 +35,24 @@ class Types
 
     public function getName(string $key) : ?string
     {
-        return collect($this->types)->filter(function ($type) use ($key) {
+        return collect($this->types)->filter(static function ($type) use ($key) {
             return $type === $key;
         })->keys()->first();
     }
+
 
     /**
      * Validate type if it is a valid type.
      *
      * @param string|null $type
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function validate(?string $type) : void
     {
         if ( ! in_array($type, array_values($this->types), true)) {
             $options = implode(", ", array_values($this->types));
-            throw new \RuntimeException("No valid type. Use one of the following: {$options}");
+            throw new RuntimeException("No valid type. Use one of the following: {$options}");
         }
     }
 

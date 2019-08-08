@@ -7,14 +7,16 @@ use Illuminate\Support\Facades\File;
 
 class ChangeloggerConfig
 {
+
     /** @var Collection */
     private $config;
 
+
     public function __construct(string $root)
     {
-        $this->config = collect();
+        $this->config = new Collection();
         if (File::exists($root . '/.changelogger.json')) {
-            $this->config = collect(json_decode(File::get($root . '/.changelogger.json'), true));
+            $this->config = new Collection(json_decode(File::get($root . '/.changelogger.json'), true));
         }
     }
 
@@ -24,7 +26,7 @@ class ChangeloggerConfig
      *
      * @return string
      */
-    public function getLanguage(): string
+    public function getLanguage() : string
     {
         if ($this->config->has('language')) {
             return $this->config->get('language');
