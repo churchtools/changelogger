@@ -6,7 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\App;
 use LaravelZero\Framework\Commands\Command;
 
-class Info extends Command
+class InfoCommand extends Command
 {
     /**
      * The signature of the command.
