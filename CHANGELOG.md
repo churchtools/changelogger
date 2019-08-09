@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
+## [v0.2.0] - 2019-08-09
+
+### Bug fix (1 change)
+
+- Fix info command
+
+### Feature change (2 changes)
+
+- Rename command `build` to `release`
+- Rename command `add` to `new`
+
+### Other (3 changes)
+
+- Add License to the project
+- Write tests for logic and commands
+- Add section 'What does it do?' to README, explaining the functionality on a high level
+
+### New feature (3 changes)
+
+- New `.changelogger.json` file for configuration
+- Release command sorts logs by groups if groups are specified in config file
+- Clean command has now a force flag
+
+
 ## [v0.1.1] - 2019-08-01
 
 ### Bug fix (1 change)
