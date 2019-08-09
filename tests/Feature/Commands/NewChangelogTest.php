@@ -14,6 +14,7 @@ class NewChangelogTest extends TestCase
 title: 'Test log'
 type: added
 author: ''
+group: ''
 
 EMPTY;
         $this->artisan('new', ['--file' => 'newLog'])
@@ -37,6 +38,7 @@ EMPTY;
 title: 'No changelog necessary'
 type: ignore
 author: ''
+group: ''
 
 EMPTY;
 
@@ -52,6 +54,87 @@ EMPTY;
         File::delete($log);
     }
 
+    public function testNewLogWithGroup() : void
+    {
+        $expected = <<<EMPTY
+title: 'Test log'
+type: added
+author: ''
+group: Calendar
+
+EMPTY;
+
+        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => ['Calendar']]));
+        $this->refreshApplication();
+
+        $this->artisan('new', ['--file' => 'newLog'])
+            ->expectsQuestion('Type of change', 'New feature')
+            ->expectsQuestion('Group of change', 'Calendar')
+            ->expectsQuestion('Your changelog', 'Test log')
+            ->expectsOutput('Changelog generated:')
+            ->assertExitCode(0);
+
+        $this->assertCommandCalled('new', ['--file' => 'newLog']);
+        $log = config('changelogger.unreleased') . '/newLog.yml';
+        $this->assertFileExists($log);
+        $content = File::get($log);
+        $this->assertEquals($expected, $content);
+        File::delete($log);
+    }
+
+    public function testNewLogWithGroupViaOption() : void
+    {
+        $expected = <<<EMPTY
+title: 'Test log'
+type: added
+author: ''
+group: Calendar
+
+EMPTY;
+
+        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => ['Calendar']]));
+        $this->refreshApplication();
+
+        $this->artisan('new', ['--file' => 'newLog', '--group' => 'Calendar'])
+            ->expectsQuestion('Type of change', 'New feature')
+            ->expectsQuestion('Your changelog', 'Test log')
+            ->expectsOutput('Changelog generated:')
+            ->assertExitCode(0);
+
+        $this->assertCommandCalled('new', ['--file' => 'newLog', '--group' => 'Calendar']);
+        $log = config('changelogger.unreleased') . '/newLog.yml';
+        $this->assertFileExists($log);
+        $content = File::get($log);
+        $this->assertEquals($expected, $content);
+        File::delete($log);
+    }
+
+    public function testTryAddNewLogWithInvalidGroup() : void
+    {
+        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => ['Calendar']]));
+        $this->refreshApplication();
+
+        $this->artisan('new', ['--file' => 'newLog', '--group' => 'Invalid Group'])
+            ->expectsQuestion('Type of change', 'New feature')
+            ->expectsOutput('No valid group. Use one of the following: Calendar')
+            ->assertExitCode(0);
+
+        $this->assertCommandCalled('new', ['--file' => 'newLog', '--group' => 'Invalid Group']);
+        $log = config('changelogger.unreleased') . '/newLog.yml';
+        $this->assertFileNotExists($log);
+    }
+
+    public function testTryAddNewLogWithGroupButNoGroupsAreInConfig() : void
+    {
+        $this->artisan('new', ['--file' => 'newLog', '--group' => 'Invalid Group'])
+            ->expectsQuestion('Type of change', 'New feature')
+            ->expectsOutput('No groups in config file. Please declare groups first.')
+            ->assertExitCode(0);
+
+        $this->assertCommandCalled('new', ['--file' => 'newLog', '--group' => 'Invalid Group']);
+        $log = config('changelogger.unreleased') . '/newLog.yml';
+        $this->assertFileNotExists($log);
+    }
 
     public function testInvalidTypeExpectsException() : void
     {

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use RuntimeException;
 
 class ChangeloggerConfig
 {
@@ -33,5 +34,68 @@ class ChangeloggerConfig
         }
 
         return 'en';
+    }
+
+
+    public function hasGroups(): bool
+    {
+        return $this->config->has('groups');
+    }
+
+    public function getGroups() : array
+    {
+        if ($this->config->has('groups') && is_array($this->config->get('groups'))) {
+            return $this->config->get('groups');
+        }
+
+        return [];
+    }
+
+
+    public function getOrderFirst():string
+    {
+        if ($this->config->has('order-first')
+            && in_array($this->config->get('order-first'), ['groups', 'types'])
+        ) {
+            return $this->config->get('order-first');
+        }
+
+        return 'types';
+    }
+
+
+    public function validateGroup(string $group): void
+    {
+        if ($group === '') {
+            return;
+        }
+
+        if (! $this->hasGroups()) {
+            throw new RuntimeException('No groups in config file. Please declare groups first.');
+        }
+
+        $groups = new Collection($this->getGroups());
+        if ( ! $groups->contains($group)) {
+            $options = $groups->implode(', ');
+            throw new RuntimeException("No valid group. Use one of the following: {$options}");
+        }
+
+    }
+
+
+    /**
+     * Compare two groups. Sorting function
+     *
+     * @param string $groupA
+     * @param string $groupB
+     *
+     * @return int
+     */
+    public function compare(string $groupA, string $groupB): int
+    {
+        $keyA = array_search($groupA, $this->getGroups(), true);
+        $keyB = array_search($groupB, $this->getGroups(), true);
+
+        return $keyA <=> $keyB;
     }
 }

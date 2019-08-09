@@ -58,6 +58,65 @@ CHANGE;
         );
     }
 
+    public function testBuildingChangelogWith2LogsAndGroups() : void
+    {
+        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => ['Calendar', 'Wiki']]));
+        $this->refreshApplication();
+
+        $this->artisan('new',
+            ['--type' => 'added', '--message' => 'Feature 1 added', '--file' => 'file1', '--group' => 'Wiki'])
+            ->assertExitCode(0);
+        $this->artisan('new',
+            ['--type' => 'added', '--message' => 'Feature 2 added', '--file' => 'file2', '--group' => 'Calendar'])
+            ->assertExitCode(0);
+        $this->artisan('new',
+            ['--type' => 'fixed', '--message' => 'Bug fixed', '--file' => 'file3', '--group' => 'Calendar'])
+            ->assertExitCode(0);
+
+        $this->assertFileExists(config('changelogger.unreleased') . '/file1.yml');
+        $this->assertFileExists(config('changelogger.unreleased') . '/file2.yml');
+        $this->assertFileExists(config('changelogger.unreleased') . '/file3.yml');
+
+        $this->artisan('release', ['tag' => 'v1.0.0'])
+            ->expectsOutput('Changelog for v1.0.0 created')
+            ->assertExitCode(0);
+
+        $this->assertCommandCalled('release', ['tag' => 'v1.0.0']);
+        $this->assertFileNotExists(config('changelogger.unreleased') . '/file1.yml');
+        $this->assertFileNotExists(config('changelogger.unreleased') . '/file2.yml');
+        $this->assertFileNotExists(config('changelogger.unreleased') . '/file3.yml');
+        $this->assertFileExists(config('changelogger.directory') . '/CHANGELOG.md');
+
+        $today = Carbon::now()->format('Y-m-d');
+        $changelog = <<<CHANGE
+<!-- CHANGELOGGER -->
+
+## [v1.0.0] - {$today}
+
+### Bug fix (1 change)
+
+#### Calendar
+
+- Bug fixed
+
+### New feature (2 changes)
+
+#### Calendar
+
+- Feature 2 added
+
+#### Wiki
+
+- Feature 1 added
+
+CHANGE;
+
+        $this->assertEquals(
+            $changelog,
+            File::get(config('changelogger.directory') . '/CHANGELOG.md')
+        );
+    }
+
     public function testBuildingEmptyChangelog() : void
     {
         File::delete(config('changelogger.directory') . '/CHANGELOG.md');
