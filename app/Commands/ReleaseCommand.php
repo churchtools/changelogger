@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\ChangeloggerConfig;
 use App\ChangesDirectory;
 use App\LogEntry;
 use App\Types;
@@ -33,19 +34,24 @@ class ReleaseCommand extends Command
     /** @var Types */
     private $types;
 
+    /** @var ChangeloggerConfigConfig */
+    private $config;
+
 
     /**
      * BuildChangelog constructor.
      *
-     * @param ChangesDirectory $dir
-     * @param Types            $types
+     * @param ChangesDirectory   $dir
+     * @param Types              $types
+     * @param ChangeloggerConfig $config
      */
-    public function __construct(ChangesDirectory $dir, Types $types)
+    public function __construct(ChangesDirectory $dir, Types $types, ChangeloggerConfig $config)
     {
         parent::__construct();
         $this->dir   = $dir;
         $this->dir->init();
         $this->types = $types;
+        $this->config = $config;
     }
 
 
@@ -104,9 +110,17 @@ CONTENT;
 
     private function generateContent(Collection $changes) : string
     {
-        $changes = $changes->groupBy(static function (LogEntry $logEntry) {
+        $groupByFunctions[] = static function (LogEntry $logEntry) {
             return $logEntry->type();
-        })->filter(static function (Collection $logType, $key) {
+        };
+
+        if ($this->config->hasGroups()) {
+            $groupByFunctions[] = static function (LogEntry $logEntry) {
+                return $logEntry->group();
+            };
+        }
+
+        $changes = $changes->groupBy($groupByFunctions)->filter(static function (Collection $logType, $key) {
             return $key !== 'ignore';
         })->sort();
 
@@ -116,18 +130,38 @@ CONTENT;
             $changes = sprintf('%d %s', $count, $count === 1 ? 'change' : 'changes');
             $content = "### {$header} ({$changes})\n\n";
 
-            $content .= $logType->map(static function (LogEntry $log) {
-                $changeEntry = "- {$log->title()}";
+            if ($this->config->hasGroups()) {
+                $content .= $logType->sort(function (Collection $logA,  Collection $logB) {
+                    return $this->config->compare($logA->first()->group(), $logB->first()->group());
+                })->map(static function (Collection $group, $name) {
+                    $content = "#### {$name}\n\n";
 
-                if ( $log->hasAuthor()) {
-                    $changeEntry .= " (props {$log->author()})";
-                }
+                    $content .= $group->map(static function (LogEntry $log) {
+                        $changeEntry = "- {$log->title()}";
 
-                return $changeEntry;
-            })->implode("\n");
+                        if ($log->hasAuthor()) {
+                            $changeEntry .= " (props {$log->author()})";
+                        }
+
+                        return $changeEntry;
+                    })->implode("\n");
+
+                    return $content;
+                })->implode("\n\n");
+            } else {
+                $content .= $logType->map(static function (LogEntry $log) {
+                    $changeEntry = "- {$log->title()}";
+
+                    if ($log->hasAuthor()) {
+                        $changeEntry .= " (props {$log->author()})";
+                    }
+
+                    return $changeEntry;
+                })->implode("\n");
+
+            }
 
             $content .= "\n";
-
             return $content;
         })->implode("\n");
     }

@@ -81,4 +81,21 @@ class ChangeloggerConfig
         }
 
     }
+
+
+    /**
+     * Compare two groups. Sorting function
+     *
+     * @param string $groupA
+     * @param string $groupB
+     *
+     * @return int
+     */
+    public function compare(string $groupA, string $groupB): int
+    {
+        $keyA = array_search($groupA, $this->getGroups(), true);
+        $keyB = array_search($groupB, $this->getGroups(), true);
+
+        return $keyA <=> $keyB;
+    }
 }
