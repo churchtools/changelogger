@@ -6,12 +6,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
-## [v0.2.1] - 2019-08-09
-
-### Feature change (1 change)
-
-- Require PHP Version 7.1 (former 7.1.3)
-
 
 ## [v0.2.0] - 2019-08-09
 
