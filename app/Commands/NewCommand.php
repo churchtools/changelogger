@@ -74,12 +74,13 @@ class NewCommand extends Command
         $type     = $this->option('type');
         $author   = $this->getAuthor();
         $empty    = $this->option('empty');
-        $group    = (string) $this->option('group');
+        $group    = $this->option('group');
 
         if ($empty) {
             $title  = LogEntry::EMPTY;
             $type   = 'ignore';
             $author = '';
+            $group  = '';
         }
 
         if ($type === null) {
@@ -87,13 +88,15 @@ class NewCommand extends Command
             $type = $this->types->getValue($type);
         }
 
-        if ($group === '' && $this->config->hasGroups()) {
+        if ($group === null && $this->config->hasGroups()) {
             $group = $this->choice('Group of change', $this->config->getGroups());
         }
 
         try {
             $this->types->validate($type);
-            $this->config->validateGroup($group);
+            if ($this->config->hasGroups()) {
+                $this->config->validateGroup($group);
+            }
         } catch (RuntimeException $exception) {
             $this->error($exception->getMessage());
 
