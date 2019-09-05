@@ -6,6 +6,7 @@ use App\ChangeloggerConfig;
 use App\ChangesDirectory;
 use App\LogEntry;
 use App\Types;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 use RuntimeException;
@@ -71,7 +72,6 @@ class NewCommand extends Command
     {
         $title    = (string) $this->option('message');
         $type     = $this->option('type');
-        $filename = $this->getFilename();
         $author   = $this->getAuthor();
         $empty    = $this->option('empty');
         $group    = (string) $this->option('group');
@@ -108,6 +108,7 @@ class NewCommand extends Command
         $logEntry = new LogEntry($title, $type, $author, $group);
 
         if ( ! $this->option('dry-run')) {
+            $filename = $this->getFilename($type);
             $this->dir->add($logEntry, $filename);
             $this->task("Saving Changelog changelogs/unreleased/$filename", static function () {
                 return true;
@@ -122,20 +123,17 @@ class NewCommand extends Command
     /**
      * Get filename.
      *
+     * @param string $type
+     *
      * @return string
+     * @throws \Exception
      */
-    private function getFilename() : string
+    private function getFilename(string $type) : string
     {
         $filename = $this->option('file');
 
         if ( ! $filename) {
-            exec('git branch --show-current', $branch, $returnVar);
-
-            if ($returnVar !== 0) {
-                $filename = $this->ask("Filename");
-            } else {
-                $filename = preg_replace('/\//', '-', $branch[0]);
-            }
+            $filename = (new Carbon())->format("Y-m-d-his") . "-{$type}";
         }
 
         $filename .= '.yml';
