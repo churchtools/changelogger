@@ -31,12 +31,12 @@ class LogEntry
      * @param string $author
      * @param string $group
      */
-    public function __construct(string $title, string $type, string $author, string $group)
+    public function __construct(string $title, string $type, string $author, ?string $group)
     {
         $this->title  = $title;
         $this->type   = $type;
         $this->author = $author;
-        $this->group  = $group;
+        $this->group  = $group ?? '';
     }
 
 
