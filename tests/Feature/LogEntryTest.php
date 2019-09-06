@@ -41,6 +41,7 @@ class LogEntryTest extends TestCase
 title: 'Test Title'
 type: 'Test Type'
 author: 'Test Author'
+group: ''
 
 YAML;
 

@@ -9,6 +9,11 @@ use Tests\TestCase;
 class ReleaseTest extends TestCase
 {
 
+    public function tearDown(): void
+    {
+        File::delete(config('changelogger.directory') . '/CHANGELOG.md');
+    }
+
     public function testBuildingChangelogWith2Logs() : void
     {
         $this->artisan('new',

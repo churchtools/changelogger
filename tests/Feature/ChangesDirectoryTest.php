@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\ChangesDirectory;
 use App\LogEntry;
-use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 /**
@@ -63,6 +62,6 @@ class ChangesDirectoryTest extends TestCase
         parent::setUp();
 
         $this->path = config('changelogger.unreleased');
-        $this->sut  = new ChangesDirectory();
+        $this->sut  = new ChangesDirectory($this->path);
     }
 }

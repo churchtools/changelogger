@@ -54,6 +54,7 @@ EMPTY;
         File::delete($log);
     }
 
+
     public function testNewLogWithGroup() : void
     {
         $expected = <<<EMPTY
@@ -64,8 +65,7 @@ group: Calendar
 
 EMPTY;
 
-        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => ['Calendar']]));
-        $this->refreshApplication();
+        $this->withGroups();
 
         $this->artisan('new', ['--file' => 'newLog'])
             ->expectsQuestion('Type of change', 'New feature')
@@ -82,6 +82,15 @@ EMPTY;
         File::delete($log);
     }
 
+
+    private function withGroups() : void
+    {
+        File::put(config('changelogger.directory') . '/.changelogger.json',
+            json_encode(['groups' => ['Calendar']]));
+        $this->refreshApplication();
+    }
+
+
     public function testNewLogWithGroupViaOption() : void
     {
         $expected = <<<EMPTY
@@ -92,8 +101,7 @@ group: Calendar
 
 EMPTY;
 
-        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => ['Calendar']]));
-        $this->refreshApplication();
+        $this->withGroups();
 
         $this->artisan('new', ['--file' => 'newLog', '--group' => 'Calendar'])
             ->expectsQuestion('Type of change', 'New feature')
@@ -109,10 +117,10 @@ EMPTY;
         File::delete($log);
     }
 
+
     public function testTryAddNewLogWithInvalidGroup() : void
     {
-        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => ['Calendar']]));
-        $this->refreshApplication();
+        $this->withGroups();
 
         $this->artisan('new', ['--file' => 'newLog', '--group' => 'Invalid Group'])
             ->expectsQuestion('Type of change', 'New feature')
@@ -124,11 +132,14 @@ EMPTY;
         $this->assertFileNotExists($log);
     }
 
+
     public function testTryAddNewLogWithGroupButNoGroupsAreInConfig() : void
     {
+        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => []]));
+        $this->refreshApplication();
+
         $this->artisan('new', ['--file' => 'newLog', '--group' => 'Invalid Group'])
             ->expectsQuestion('Type of change', 'New feature')
-            ->expectsOutput('No groups in config file. Please declare groups first.')
             ->assertExitCode(0);
 
         $this->assertCommandCalled('new', ['--file' => 'newLog', '--group' => 'Invalid Group']);
@@ -136,10 +147,20 @@ EMPTY;
         $this->assertFileNotExists($log);
     }
 
+
     public function testInvalidTypeExpectsException() : void
     {
+        $this->withoutGroups();
+
         $this->artisan('new', ['--type' => 'invalid'])
             ->expectsOutput('No valid type. Use one of the following: added, fixed, changed, deprecated, removed, security, performance, other, ignore')
             ->assertExitCode(0);
+    }
+
+
+    private function withoutGroups() : void
+    {
+        File::delete(config('changelogger.directory') . '/.changelogger.json');
+        $this->refreshApplication();
     }
 }
