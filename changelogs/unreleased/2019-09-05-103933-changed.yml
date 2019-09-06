@@ -1,4 +1,4 @@
-title: 'New command uses datetimes as filenames as defaults.'
+title: 'New command uses datetimes as filename prefixes as defaults.'
 type: changed
 author: ''
 group: ''

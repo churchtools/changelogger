@@ -70,11 +70,11 @@ class NewCommand extends Command
      */
     public function handle()
     {
-        $title    = (string) $this->option('message');
-        $type     = $this->option('type');
-        $author   = $this->getAuthor();
-        $empty    = $this->option('empty');
-        $group    = $this->option('group');
+        $title  = (string) $this->option('message');
+        $type   = $this->option('type');
+        $author = $this->getAuthor();
+        $empty  = $this->option('empty');
+        $group  = $this->option('group');
 
         if ($empty) {
             $title  = LogEntry::EMPTY;
@@ -103,7 +103,6 @@ class NewCommand extends Command
             return;
         }
 
-
         while ($title === '') {
             $title = $this->ask('Your changelog');
         }
@@ -123,6 +122,19 @@ class NewCommand extends Command
     }
 
 
+    private function getAuthor() : string
+    {
+        $author = '';
+
+        if ($this->option('user')) {
+            exec('git config user.name', $user, $returnVar);
+            $author = $user[0];
+        }
+
+        return $author;
+    }
+
+
     /**
      * Get filename.
      *
@@ -136,7 +148,21 @@ class NewCommand extends Command
         $filename = $this->option('file');
 
         if ( ! $filename) {
-            $filename = (new Carbon())->format("Y-m-d-his") . "-{$type}";
+            $now      = (new Carbon())->format("Y-m-d-his");
+            $filename = $type;
+
+            /**
+             * Command to get current branch name.
+             * @see https://stackoverflow.com/questions/6245570/how-to-get-the-current-branch-name-in-git
+             */
+            exec('which git', $path, $returnVarWhich);
+            if ($returnVarWhich === 0 && count($path) > 0) {
+                exec("git branch | grep \\* | cut -d ' ' -f2", $branch, $returnVarBranch);
+                if ($returnVarBranch === 0 && isset($branch[0])) {
+                    $filename = preg_replace('/\//', '-', $branch[0]);
+                }
+            }
+            $filename = "{$now}-{$filename}";
         }
 
         $filename .= '.yml';
@@ -147,18 +173,5 @@ class NewCommand extends Command
         }
 
         return $filename;
-    }
-
-
-    private function getAuthor() : string
-    {
-        $author = '';
-
-        if ($this->option('user')) {
-            exec('git config user.name', $user, $returnVar);
-            $author = $user[0];
-        }
-
-        return $author;
     }
 }
