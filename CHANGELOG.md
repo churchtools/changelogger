@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
+## [v0.3.0] - 2019-09-09
+
+### Feature change (1 change)
+
+- New command uses datetimes as filename prefixes as defaults.
+
+### New feature (1 change)
+
+- New show command to list all unreleased changes
+
+### Bug fix (1 change)
+
+- Using --empty flag for no changelogs, no question is asked for a group.
+
 
 ## [v0.2.0] - 2019-08-09
 
