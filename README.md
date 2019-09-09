@@ -6,6 +6,7 @@
   <a href="https://packagist.org/packages/churchtools/changelogger"><img src="https://poser.pugx.org/churchtools/changelogger/d/total.svg?format=flat-square" alt="Total Downloads"></a>
   <a href="https://packagist.org/packages/churchtools/changelogger"><img src="https://poser.pugx.org/churchtools/changelogger/v/stable.svg?format=flat-square" alt="Latest Stable Version"></a>
   <a href="https://packagist.org/packages/churchtools/changelogger"><img src="https://poser.pugx.org/churchtools/changelogger/license.svg?format=flat-square" alt="License"></a>
+  <a href="https://travis-ci.org/churchtools/changelogger"><img src="https://travis-ci.org/churchtools/changelogger.svg?branch=master" alt="Travis Build Status"></a>
 </p>
 
 **Changeloggger is a CLI tool to help you creating better changelogs**
