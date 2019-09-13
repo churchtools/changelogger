@@ -54,6 +54,8 @@ changelogger release <tag>
 changelogger clean
 ```
 
+![Changelogger Demo](assets/changelogger-demo.gif)
+
 ## License
 
 [churchtools/changelogger](https://github.com/churchtools/changelogger) is licensed under the
