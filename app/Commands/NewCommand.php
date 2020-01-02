@@ -86,6 +86,13 @@ class NewCommand extends Command
         if ($type === null) {
             $type = $this->choice('Type of change', $this->types->keys());
             $type = $this->types->getValue($type);
+
+            if ($type === 'ignore') {
+                $title  = LogEntry::EMPTY;
+                $type   = 'ignore';
+                $author = '';
+                $group  = '';
+            }
         }
 
         if ($group === null && $this->config->hasGroups()) {
