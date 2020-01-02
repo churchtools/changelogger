@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\ChangeloggerConfig;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Yaml\Yaml;
 use Tests\TestCase;
 
 class ChangeloggerConfigTest extends TestCase
@@ -36,7 +37,7 @@ class ChangeloggerConfigTest extends TestCase
 
     public function testReturnDefaultEnStringIfNoConfigFileExists() : void
     {
-        File::delete('./.changelogger.json');
+        File::delete('./.changelogger.yml');
         $config = new ChangeloggerConfig('.');
 
         $this->assertEquals('en', $config->getLanguage());
@@ -45,7 +46,7 @@ class ChangeloggerConfigTest extends TestCase
 
     public function testReturnCustomLanguageSettingFromConfigFile() : void
     {
-        File::put('./.changelogger.json', json_encode(['language' => 'de']));
+        File::put('./.changelogger.yml', Yaml::dump(['language' => 'de']));
         $config = new ChangeloggerConfig('.');
 
         $this->assertEquals('de', $config->getLanguage());
@@ -60,7 +61,7 @@ class ChangeloggerConfigTest extends TestCase
      */
     public function testComparingGroupsForSorting(array $unsorted, array $expected) : void
     {
-        File::put('./.changelogger.json', json_encode(['groups' => $expected]));
+        File::put('./.changelogger.yml', Yaml::dump(['groups' => $expected]));
         $config = new ChangeloggerConfig('.');
 
         uasort($unsorted, [$config, 'compare']);
@@ -71,7 +72,7 @@ class ChangeloggerConfigTest extends TestCase
 
     protected function tearDown() : void
     {
-        File::delete('./.changelogger.json');
+        File::delete('./.changelogger.yml');
         parent::tearDown();
     }
 }

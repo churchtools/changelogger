@@ -3,6 +3,7 @@
 namespace Tests\Feature\Commands;
 
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Yaml\Yaml;
 use Tests\TestCase;
 
 class NewChangelogTest extends TestCase
@@ -85,8 +86,8 @@ EMPTY;
 
     private function withGroups() : void
     {
-        File::put(config('changelogger.directory') . '/.changelogger.json',
-            json_encode(['groups' => ['Calendar']]));
+        File::put(config('changelogger.directory') . '/.changelogger.yml',
+            Yaml::dump(['groups' => ['Calendar']]));
         $this->refreshApplication();
     }
 
@@ -135,7 +136,7 @@ EMPTY;
 
     public function testTryAddNewLogWithGroupButNoGroupsAreInConfig() : void
     {
-        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => []]));
+        File::put(config('changelogger.directory') . '/.changelogger.yml', Yaml::dump(['groups' => []]));
         $this->refreshApplication();
 
         $this->artisan('new', ['--file' => 'newLog', '--group' => 'Invalid Group'])
@@ -160,7 +161,7 @@ EMPTY;
 
     private function withoutGroups() : void
     {
-        File::delete(config('changelogger.directory') . '/.changelogger.json');
+        File::delete(config('changelogger.directory') . '/.changelogger.yml');
         $this->refreshApplication();
     }
 }

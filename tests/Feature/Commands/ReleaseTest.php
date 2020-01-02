@@ -4,6 +4,7 @@ namespace Tests\Feature\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Yaml\Yaml;
 use Tests\TestCase;
 
 class ReleaseTest extends TestCase
@@ -65,7 +66,7 @@ CHANGE;
 
     public function testBuildingChangelogWith2LogsAndGroups() : void
     {
-        File::put(config('changelogger.directory') . '/.changelogger.json', json_encode(['groups' => ['Calendar', 'Wiki']]));
+        File::put(config('changelogger.directory') . '/.changelogger.yml', Yaml::dump(['groups' => ['Calendar', 'Wiki']]));
         $this->refreshApplication();
 
         $this->artisan('new',
