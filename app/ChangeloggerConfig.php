@@ -17,6 +17,10 @@ class ChangeloggerConfig
     public function __construct(string $root)
     {
         $this->config = new Collection();
+        if (File::exists($root . '/.changelogger.json')) {
+            throw new RuntimeException('JSON config file found. From v0.4 YAML is used. Please convert your config file.');
+        }
+
         if (File::exists($root . '/.changelogger.yml')) {
             $this->config = new Collection(Yaml::parseFile($root . '/.changelogger.yml'));
         }
