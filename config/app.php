@@ -1,10 +1,12 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+
 return [
     'name'       => 'Changelogger',
-    'version'    => 'v0.3.0',
+    'version'    => 'v0.4.0',
     'production' => false,
     'providers'  => [
-        0 => 'App\\Providers\\AppServiceProvider',
+        0 => AppServiceProvider::class,
     ],
 ];

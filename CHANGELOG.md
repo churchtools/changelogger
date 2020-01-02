@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
+## [v0.4.0] - 2020-01-02
+
+### Feature change (2 changes)
+
+- BREAKING: Use YAML format for config file. Old JSON configs must be converted.
+- If 'No Changelog' is chosen from the list, no further questions will be asked.
+
+
 ## [v0.3.0] - 2019-09-09
 
 ### Feature change (1 change)
