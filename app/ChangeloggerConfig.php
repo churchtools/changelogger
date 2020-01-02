@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use RuntimeException;
+use Symfony\Component\Yaml\Yaml;
 
 class ChangeloggerConfig
 {
@@ -16,8 +17,8 @@ class ChangeloggerConfig
     public function __construct(string $root)
     {
         $this->config = new Collection();
-        if (File::exists($root . '/.changelogger.json')) {
-            $this->config = new Collection(json_decode(File::get($root . '/.changelogger.json'), true));
+        if (File::exists($root . '/.changelogger.yml')) {
+            $this->config = new Collection(Yaml::parseFile($root . '/.changelogger.yml'));
         }
     }
 
