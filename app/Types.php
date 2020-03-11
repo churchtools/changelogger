@@ -10,6 +10,7 @@ class Types
     private $types = [
         'New feature'             => 'added',
         'Bug fix'                 => 'fixed',
+        'Hotfix'                  => 'hotfix',
         'Feature change'          => 'changed',
         'New deprecation'         => 'deprecated',
         'Feature removal'         => 'removed',
