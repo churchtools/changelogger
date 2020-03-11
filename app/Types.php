@@ -7,19 +7,12 @@ use RuntimeException;
 class Types
 {
 
-    private $types = [
-        'New feature'             => 'added',
-        'Bug fix'                 => 'fixed',
-        'Hotfix'                  => 'hotfix',
-        'Feature change'          => 'changed',
-        'New deprecation'         => 'deprecated',
-        'Feature removal'         => 'removed',
-        'Security fix'            => 'security',
-        'Performance improvement' => 'performance',
-        'Other'                   => 'other',
-        'No Changelog'            => 'ignore',
-    ];
+    private $types;
 
+    public function __construct()
+    {
+        $this->types = config('changelogger.types');
+    }
 
     /**
      * Find name of a given type.

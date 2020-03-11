@@ -1,0 +1,4 @@
+title: 'Move changelogger type from Types.php to config/changelogger.php'
+type: added
+author: 'Christopher-Daniel Wandrey'
+group: ''

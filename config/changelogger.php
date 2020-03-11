@@ -13,4 +13,16 @@ return [
     */
     'directory'  => env('DIRECTORY', getcwd()),
     'unreleased' => env('DIRECTORY', getcwd()) . '/changelogs/unreleased',
+    'types'      => [
+            'New feature'             => 'added',
+            'Bug fix'                 => 'fixed',
+            'Hotfix'                  => 'hotfix',
+            'Feature change'          => 'changed',
+            'New deprecation'         => 'deprecated',
+            'Feature removal'         => 'removed',
+            'Security fix'            => 'security',
+            'Performance improvement' => 'performance',
+            'Other'                   => 'other',
+            'No Changelog'            => 'ignore',
+    ],
 ];
