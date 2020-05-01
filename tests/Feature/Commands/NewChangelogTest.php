@@ -154,7 +154,7 @@ EMPTY;
         $this->withoutGroups();
 
         $this->artisan('new', ['--type' => 'invalid'])
-            ->expectsOutput('No valid type. Use one of the types in config/changelogger.php')
+            ->expectsOutput('No valid type. Use one of the following: added, fixed, hotfix, changed, deprecated, removed, security, performance, other, ignore')
             ->assertExitCode(0);
     }
 
