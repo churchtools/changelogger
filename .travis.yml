@@ -9,7 +9,7 @@ install:
   - rm composer.lock
   - travis_retry composer update --prefer-dist
 
-script: vendor/bin/phpunit
+script: composer test
 
 allow_failures:
   - php: 7.4snapshot
