@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
+## [v0.5.0] - 2020-05-01
+
+### Feature removal (1 change)
+
+- Drop support for PHP 7.1
+
+### Other (1 change)
+
+- Update to Laravel Zero 7.1. Changelogger requires PHP 7.2.5.
+
+### New feature (2 changes)
+
+- Move changelogger type from Types.php to config/changelogger.php (props @cwandrey)
+- Define custom types in .changelogger.yml
+
+
 ## [v0.4.0] - 2020-01-02
 
 ### Feature change (2 changes)
