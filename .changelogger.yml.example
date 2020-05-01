@@ -4,3 +4,11 @@ groups:
   - Module B
   - Module C
 
+#  You can use custom types, which are used instead of the default types.
+#  This makes it possible to introduce new types, remove type, which are
+#  not needed or even translate them into your language.
+#  The type `ignore: No Changelog` is added to your list if no `ignore` type
+#  is provided to allow empty changelogs.
+types:
+  added: New Feature
+  fixed: Bug fix

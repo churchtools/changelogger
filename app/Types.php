@@ -9,9 +9,9 @@ class Types
 
     private $types;
 
-    public function __construct()
+    public function __construct(ChangeloggerConfig $config)
     {
-        $this->types = config('changelogger.types');
+        $this->types = $config->getTypes();
     }
 
     /**
