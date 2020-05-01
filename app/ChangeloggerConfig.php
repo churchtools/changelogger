@@ -103,4 +103,28 @@ class ChangeloggerConfig
 
         return $keyA <=> $keyB;
     }
+
+    /**
+     * Get list of types.
+     *
+     * Return default types declared in config/changelogger.php or
+     * use custom types from .changelogger.yml.
+     *
+     * @return array
+     */
+    public function getTypes(): array {
+        $types = null;
+        $defaultTypes = config('changelogger.types');
+
+        if ($this->config->has('types')) {
+            $types = $this->config->get('types');
+
+            if (! isset($types['ignore'])) {
+                $types['ignore'] = 'No Changelog';
+            }
+        }
+
+
+        return $types !== null ? array_flip($types) : $defaultTypes;
+    }
 }
