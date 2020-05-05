@@ -1,5 +1,10 @@
 module.exports = {
-  purge: [],
+  purge: [
+    './.vuepress/theme/**/*.html',
+    './.vuepress/theme/**/*.vue',
+    './.vuepress/theme/**/*.jsx',
+    './.vuepress/theme/**/*.styl'
+  ],
   theme: {
     extend: {},
   },

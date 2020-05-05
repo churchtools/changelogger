@@ -7,7 +7,12 @@
         @apply mb-2;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    .home-layout h3,
+    .home-layout h4,
+    .home-layout h5,
+    .home-layout h6 {
         @apply text-gray-600 mb-2 mt-8 border-l-8 -ml-8 pl-6 border-teal-400 font-bold;
     }
 
@@ -19,12 +24,36 @@
         @apply text-2xl
     }
 
-    h3, h4, h5, h6 {
+    .home-layout h3,
+    .home-layout h4,
+    .home-layout h5,
+    .home-layout h6 {
         @apply text-xl
     }
 
+    .changelog-layout h3 {
+        @apply text-xl font-semibold mt-4 text-purple-600
+    }
+
+
     ul {
         @apply list-disc
+    }
+
+    .changelog-layout ul {
+        @apply list-none -mx-8
+    }
+
+    .changelog-layout li {
+        @apply px-10 py-2 bg-gray-100
+    }
+
+    .changelog-layout li:nth-child(2) {
+        @apply bg-white
+    }
+
+    .changelog-layout li:hover {
+        @apply bg-gray-200
     }
 
     a {
@@ -40,6 +69,6 @@
     }
 
     pre {
-        @apply block bg-gray-800  text-gray-200 -mx-8 my-2 p-4
+        @apply block bg-gray-800 text-gray-200 -mx-8 my-2 p-4 overflow-x-auto
     }
 }

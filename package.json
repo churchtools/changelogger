@@ -8,5 +8,8 @@
   "dependencies": {
     "tailwindcss": "^1.4.4",
     "vuepress": "^1.4.1"
+  },
+  "scripts": {
+    "docs:build": "cd docs && vuepress build"
   }
 }
