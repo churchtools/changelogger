@@ -11,7 +11,8 @@ module.exports = {
   themeConfig: {
     nav: [
       { text: 'Home', link: '/changelogger/', icon: 'home' },
-      { text: 'Changelog', link: '/changelogger/changelog.html', icon: 'announcement' }
+      { text: 'Changelog', link: '/changelogger/changelog.html', icon: 'announcement' },
+      { text: 'GitHub', link: 'https://github.com/churchtools/changelogger', icon: 'code' }
     ]
   },
   markdown: {
