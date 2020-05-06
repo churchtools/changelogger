@@ -1,5 +1,5 @@
 <template>
-    <nav class="flex flex-row md:flex-col items-center items-stretch my-1 md:mt-8">
+    <nav class="flex flex-row overflow-x-auto md:flex-col items-center items-stretch my-1 md:mt-8">
       <span
         v-for="site in $site.themeConfig.nav"
         class="m-2 mt-0 flex-1 md:flex-none"
