@@ -7,7 +7,7 @@
         <a
           :href="site.link"
           :title="site.text"
-          class="flex items-center justify-center block w-full py-1 rounded font-medium text-gray-600 font-semibold hover:bg-gray-300 hover:text-gray-900"
+          class="flex items-center justify-center md:justify-start block w-full py-1 rounded font-medium text-gray-600 font-semibold hover:bg-gray-300 hover:text-gray-900"
           :class="activeClasses(site)"
         >
           <Icon
