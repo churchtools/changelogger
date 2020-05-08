@@ -10,6 +10,8 @@
     "vuepress": "^1.4.1"
   },
   "scripts": {
+    "docs:start": "cd docs && vuepress dev",
+    "docs:dev": "npm run docs:start",
     "docs:build": "cd docs && vuepress build"
   }
 }
