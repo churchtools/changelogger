@@ -1,5 +1,5 @@
 {
-  "name": "changelogger",
+  "name": "@churchtools/changelogger",
   "version": "0.5.0",
   "description": "Changelogger CLI",
   "repository": "git@github.com:churchtools/changelogger.git",
