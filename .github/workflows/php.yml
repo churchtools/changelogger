@@ -2,12 +2,12 @@ name: PHP Composer
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, github-actions ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  build:
+  tests:
 
     runs-on: ubuntu-latest
 
