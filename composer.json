@@ -22,11 +22,11 @@
     ],
     "require": {
         "php": "^7.2.5",
-        "laravel-zero/framework": "^7.1",
-        "symfony/yaml": "^5.0",
         "ext-json": "*"
     },
     "require-dev": {
+        "laravel-zero/framework": "^7.1",
+        "symfony/yaml": "^5.0",
         "mockery/mockery": "^1.0",
         "phpunit/phpunit": "^8.5"
     },
