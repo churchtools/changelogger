@@ -43,7 +43,7 @@ class LogEntry
     /**
      * Create new LogEntry object from a YAML file.
      *
-     * @param $file
+     * @param SplFileInfo $file
      *
      * @return LogEntry
      */
@@ -73,7 +73,7 @@ class LogEntry
     /**
      * Get log entry as array.
      *
-     * @return array
+     * @return string[]
      */
     public function toArray() : array
     {

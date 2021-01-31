@@ -47,6 +47,7 @@ class ChangeloggerConfig
         return $this->config->has('groups');
     }
 
+    /** @return string[] */
     public function getGroups() : array
     {
         if ($this->config->has('groups') && is_array($this->config->get('groups'))) {
@@ -110,7 +111,7 @@ class ChangeloggerConfig
      * Return default types declared in config/changelogger.php or
      * use custom types from .changelogger.yml.
      *
-     * @return array
+     * @return string[]
      */
     public function getTypes(): array {
         $types = null;

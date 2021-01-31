@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Finder\SplFileInfo;
 
 class ChangesDirectory
 {
@@ -51,7 +52,7 @@ class ChangesDirectory
     /**
      * Get all files of unreleased changes.
      *
-     * @return array<\SplFileInfo>
+     * @return SplFileInfo[]
      */
     public function getAll() : array
     {
