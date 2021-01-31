@@ -50,14 +50,16 @@ class ShowCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle()
+    public function handle() : int
     {
         $this->table($this->tableHeaders(), $this->tableRows());
+
+        return 0;
     }
 
-
+    /** @return string[] */
     private function tableHeaders() : array
     {
         if ($this->config->hasGroups()) {
@@ -67,7 +69,7 @@ class ShowCommand extends Command
         return ['No.', 'Type', 'Log', 'Author'];
     }
 
-
+    /** @return string[][] */
     private function tableRows() : array
     {
         $hasGroups          = $this->config->hasGroups();

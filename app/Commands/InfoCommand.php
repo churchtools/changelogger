@@ -32,7 +32,7 @@ class InfoCommand extends Command
     /**
      * InfoCommand constructor.
      *
-     * @param $config
+     * @param ChangeloggerConfig $config
      */
     public function __construct(ChangeloggerConfig $config)
     {
@@ -44,14 +44,16 @@ class InfoCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle() : void
+    public function handle() : int
     {
         $version = App::version();
         $this->alert("Changelogger - $version");
         $this->line("Changelogger is a simple CLI tool to help you creating new consistent changelog entries.\n");
         $this->info('For more information what a changelog is and why you need one, see: <comment>https://keepachangelog.com</comment>');
         $this->info("Language used: {$this->config->getLanguage()}");
+
+        return 0;
     }
 }

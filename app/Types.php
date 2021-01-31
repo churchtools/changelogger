@@ -6,7 +6,7 @@ use RuntimeException;
 
 class Types
 {
-
+    /** @var string[] */
     private $types;
 
     public function __construct(ChangeloggerConfig $config)
@@ -54,7 +54,7 @@ class Types
     /**
      * Get all types as array.
      *
-     * @return array
+     * @return string[]
      */
     public function getAll() : array
     {
@@ -65,7 +65,7 @@ class Types
     /**
      * Get only keys of types.
      *
-     * @return array
+     * @return string[]
      */
     public function keys() : array
     {

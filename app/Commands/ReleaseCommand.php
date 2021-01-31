@@ -34,7 +34,7 @@ class ReleaseCommand extends Command
     /** @var Types */
     private $types;
 
-    /** @var ChangeloggerConfigConfig */
+    /** @var ChangeloggerConfig */
     private $config;
 
 
@@ -58,14 +58,14 @@ class ReleaseCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle()
+    public function handle() : int
     {
         if ( ! $this->dir->hasChanges()) {
             $this->build('No changes.');
             $this->info("Changelog for {$this->argument('tag')} created");
-           return;
+           return -1;
         }
 
         $changes = collect();
@@ -80,6 +80,8 @@ class ReleaseCommand extends Command
         $this->task('Clean unreleased changes', function () {
             $this->dir->clean();
         });
+
+        return 0;
     }
 
 
