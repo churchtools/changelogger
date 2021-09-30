@@ -36,9 +36,9 @@ class ReleaseTest extends TestCase
             ->assertExitCode(0);
 
         $this->assertCommandCalled('release', ['tag' => 'v1.0.0']);
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/file1.yml');
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/file2.yml');
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/file3.yml');
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/file1.yml');
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/file2.yml');
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/file3.yml');
         $this->assertFileExists(config('changelogger.directory') . '/CHANGELOG.md');
 
         $today = Carbon::now()->format('Y-m-d');
@@ -88,9 +88,9 @@ CHANGE;
             ->assertExitCode(0);
 
         $this->assertCommandCalled('release', ['tag' => 'v1.0.0']);
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/file1.yml');
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/file2.yml');
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/file3.yml');
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/file1.yml');
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/file2.yml');
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/file3.yml');
         $this->assertFileExists(config('changelogger.directory') . '/CHANGELOG.md');
 
         $today = Carbon::now()->format('Y-m-d');
