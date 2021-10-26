@@ -127,24 +127,10 @@ CHANGE;
     {
         File::delete(config('changelogger.directory') . '/CHANGELOG.md');
         $this->artisan('release', ['tag' => 'v1.0.0'])
-            ->expectsOutput('Changelog for v1.0.0 created')
+            ->expectsOutput('No Changes -> No Changelog for v1.0.0 created')
             ->assertExitCode(0);
 
         $this->assertCommandCalled('release', ['tag' => 'v1.0.0']);
-        $this->assertFileExists(config('changelogger.directory') . '/CHANGELOG.md');
-
-        $today = Carbon::now()->format('Y-m-d');
-        $changelog = <<<CHANGE
-<!-- CHANGELOGGER -->
-
-## [v1.0.0] - {$today}
-
-No changes.
-CHANGE;
-
-        $this->assertEquals(
-            $changelog,
-            File::get(config('changelogger.directory') . '/CHANGELOG.md')
-        );
+        $this->assertFileNotExists(config('changelogger.directory') . '/CHANGELOG.md');
     }
 }
