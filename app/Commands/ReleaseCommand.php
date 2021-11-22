@@ -134,10 +134,18 @@ CONTENT;
                 $content .= $logType->sort(function (Collection $logA,  Collection $logB) {
                     return $this->config->compare($logA->first()->group(), $logB->first()->group());
                 })->map(static function (Collection $group, $name) use ($markdownOptions){
-                    $content = "#### {$name}\n\n";
+                    if ($markdownOptions['groupsAsList']) {
+                        $content = "{$markdownOptions['listStyle']} **{$name}**\n";
+                    } else {
+                        $content = "#### {$name}\n\n";
+                    }
 
                     $content .= $group->map(static function (LogEntry $log) use ($markdownOptions) {
-                        $changeEntry = "{$markdownOptions['listStyle']} {$log->title()}";
+                        $changeEntry = "";
+                        if ($markdownOptions['groupsAsList']) {
+                            $changeEntry = "  ";
+                        }
+                        $changeEntry .= "{$markdownOptions['listStyle']} {$log->title()}";
 
                         if ($log->hasAuthor()) {
                             $changeEntry .= " (props {$log->author()})";

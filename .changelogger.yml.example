@@ -17,3 +17,5 @@ types:
 markdown:
     # You can choose between dash (-), asterisks (*) or plus sign (+)
     listStyle: -
+    # if set to true groups are rendered as markdown lists
+    groupsAsList: false

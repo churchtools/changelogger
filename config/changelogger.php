@@ -27,5 +27,6 @@ return [
     ],
     'markdown'      => [
         'listStyle' => '-',
+        'groupsAsList' => false,
     ],
 ];
