@@ -128,15 +128,16 @@ CONTENT;
             $count   = $logType->count();
             $changes = sprintf('%d %s', $count, $count === 1 ? 'change' : 'changes');
             $content = "### {$header} ({$changes})\n\n";
+            $markdownOptions = $this->config->getMarkdownOptions();
 
             if ($this->config->hasGroups()) {
                 $content .= $logType->sort(function (Collection $logA,  Collection $logB) {
                     return $this->config->compare($logA->first()->group(), $logB->first()->group());
-                })->map(static function (Collection $group, $name) {
+                })->map(static function (Collection $group, $name) use ($markdownOptions){
                     $content = "#### {$name}\n\n";
 
-                    $content .= $group->map(static function (LogEntry $log) {
-                        $changeEntry = "- {$log->title()}";
+                    $content .= $group->map(static function (LogEntry $log) use ($markdownOptions) {
+                        $changeEntry = "{$markdownOptions['listStyle']} {$log->title()}";
 
                         if ($log->hasAuthor()) {
                             $changeEntry .= " (props {$log->author()})";
@@ -148,8 +149,8 @@ CONTENT;
                     return $content;
                 })->implode("\n\n");
             } else {
-                $content .= $logType->map(static function (LogEntry $log) {
-                    $changeEntry = "- {$log->title()}";
+                $content .= $logType->map(static function (LogEntry $log) use ($markdownOptions) {
+                    $changeEntry = "{$markdownOptions['listStyle']} {$log->title()}";
 
                     if ($log->hasAuthor()) {
                         $changeEntry .= " (props {$log->author()})";

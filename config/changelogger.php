@@ -25,4 +25,7 @@ return [
             'Other'                   => 'other',
             'No Changelog'            => 'ignore',
     ],
+    'markdown'      => [
+        'listStyle' => '-',
+    ],
 ];
