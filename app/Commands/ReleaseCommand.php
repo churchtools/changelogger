@@ -63,8 +63,7 @@ class ReleaseCommand extends Command
     public function handle()
     {
         if ( ! $this->dir->hasChanges()) {
-            $this->build('No changes.');
-            $this->info("Changelog for {$this->argument('tag')} created");
+           $this->info("No Changes -> No Changelog for {$this->argument('tag')} created");
            return;
         }
 
