@@ -208,42 +208,4 @@ CHANGE;
             File::get(config('changelogger.directory') . '/CHANGELOG.md')
         );
     }
-
-    public function testBuildingChangelogWithMarkdownListStyleStar() : void
-    {
-        File::put(config('changelogger.directory') . '/.changelogger.yml', Yaml::dump(['groups' => ['Wiki'], 'markdown' => ['listStyle' => '*']]));
-        $this->refreshApplication();
-        $this->artisan('new',
-            ['--type' => 'added', '--message' => 'Feature 1 added', '--file' => 'file1', '--group' => 'Wiki'])
-            ->assertExitCode(0);
-
-        $this->assertFileExists(config('changelogger.unreleased') . '/file1.yml');
-
-        $this->artisan('release', ['tag' => 'v1.0.0'])
-            ->expectsOutput('Changelog for v1.0.0 created')
-            ->assertExitCode(0);
-
-        $this->assertCommandCalled('release', ['tag' => 'v1.0.0']);
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/file1.yml');
-        $this->assertFileExists(config('changelogger.directory') . '/CHANGELOG.md');
-
-        $today = Carbon::now()->format('Y-m-d');
-        $changelog = <<<CHANGE
-<!-- CHANGELOGGER -->
-
-## [v1.0.0] - {$today}
-
-### New feature (1 change)
-
-#### Wiki
-
-* Feature 1 added
-
-CHANGE;
-
-        $this->assertEquals(
-            $changelog,
-            File::get(config('changelogger.directory') . '/CHANGELOG.md')
-        );
-    }
 }
