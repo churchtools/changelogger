@@ -1,6 +1,6 @@
 {
   "name": "@churchtools/changelogger",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Changelogger CLI",
   "repository": "git@github.com:churchtools/changelogger.git",
   "author": "Hans-Helge Buerger <hhbuerger@churchtools.de>",
