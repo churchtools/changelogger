@@ -6,8 +6,8 @@
   "author": "Hans-Helge Buerger <hhbuerger@churchtools.de>",
   "license": "Apache-2.0",
   "dependencies": {
-    "tailwindcss": "^1.4.4",
-    "vuepress": "^1.4.1"
+    "tailwindcss": "^1.9.6",
+    "vuepress": "^1.8.2"
   },
   "scripts": {
     "docs:start": "cd docs && vuepress dev",
