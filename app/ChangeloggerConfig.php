@@ -128,4 +128,15 @@ class ChangeloggerConfig
 
         return $types !== null ? array_flip($types) : $defaultTypes;
     }
+
+    public function getMarkdownOptions(): array {
+        $options = [];
+        $defaultOptions = config('changelogger.markdown');
+        if ($this->config->has('markdown')) {
+            $options = array_merge($defaultOptions, $this->config->get('markdown'));
+        } else {
+            $options = $defaultOptions;
+        }
+        return $options;
+    }
 }
