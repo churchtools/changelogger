@@ -131,7 +131,7 @@ CHANGE;
             ->assertExitCode(0);
 
         $this->assertCommandCalled('release', ['tag' => 'v1.0.0']);
-        $this->assertFileNotExists(config('changelogger.directory') . '/CHANGELOG.md');
+        $this->assertFileDoesNotExist(config('changelogger.directory') . '/CHANGELOG.md');
     }
 
     public function testBuildingChangelogWithMarkdownListStyleStar() : void
@@ -149,7 +149,7 @@ CHANGE;
             ->assertExitCode(0);
 
         $this->assertCommandCalled('release', ['tag' => 'v1.0.0']);
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/file1.yml');
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/file1.yml');
         $this->assertFileExists(config('changelogger.directory') . '/CHANGELOG.md');
 
         $today = Carbon::now()->format('Y-m-d');
@@ -187,7 +187,7 @@ CHANGE;
             ->assertExitCode(0);
 
         $this->assertCommandCalled('release', ['tag' => 'v1.0.0']);
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/file1.yml');
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/file1.yml');
         $this->assertFileExists(config('changelogger.directory') . '/CHANGELOG.md');
 
         $today = Carbon::now()->format('Y-m-d');
