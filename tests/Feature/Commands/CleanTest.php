@@ -30,6 +30,6 @@ class CleanTest extends TestCase
             ->expectsQuestion('Do you want to delete 1 file?', true)
             ->assertExitCode(0);
 
-        $this->assertFileNotExists(config('changelogger.unreleased') . '/test.yml');
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/test.yml');
     }
 }

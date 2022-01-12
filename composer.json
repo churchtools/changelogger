@@ -21,14 +21,14 @@
         }
     ],
     "require": {
-        "php": "^7.3",
+        "php": "^7.4 || ^8.0",
         "ext-json": "*"
     },
     "require-dev": {
-        "laravel-zero/framework": "^7.2",
-        "symfony/yaml": "^5.0",
-        "mockery/mockery": "^1.0",
-        "phpunit/phpunit": "^8.5"
+        "laravel-zero/framework": "^8.9",
+        "mockery/mockery": "^1.4",
+        "phpunit/phpunit": "^9.5",
+        "symfony/yaml": "^5.3"
     },
     "autoload": {
         "psr-4": {

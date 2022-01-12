@@ -130,7 +130,7 @@ EMPTY;
 
         $this->assertCommandCalled('new', ['--file' => 'newLog', '--group' => 'Invalid Group']);
         $log = config('changelogger.unreleased') . '/newLog.yml';
-        $this->assertFileNotExists($log);
+        $this->assertFileDoesNotExist($log);
     }
 
 
@@ -145,7 +145,7 @@ EMPTY;
 
         $this->assertCommandCalled('new', ['--file' => 'newLog', '--group' => 'Invalid Group']);
         $log = config('changelogger.unreleased') . '/newLog.yml';
-        $this->assertFileNotExists($log);
+        $this->assertFileDoesNotExist($log);
     }
 
 
