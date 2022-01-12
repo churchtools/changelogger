@@ -22,6 +22,6 @@ git add -A
 git commit -m 'Deploy Changelogger Website'
 
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
-git push -f git@github.com:churchtools/changelogger.git master:gh-pages
+git push -f git@github.com:churchtools/changelogger.git main:gh-pages
 
 cd -

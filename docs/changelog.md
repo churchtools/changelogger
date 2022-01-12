@@ -9,6 +9,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
+## [v0.6.0] - 2021-12-14
+
+### New feature (4 changes)
+
+- Update minimal PHP Version to 7.3
+- Markdown list styles can now be configured.
+- Adds a new config option groupsAsList.
+- Using the release command without any changes does not change the CHANGELOG.md file anymore.
+
+
 ## [v0.5.0] - 2020-05-01
 
 ### Feature removal (1 change)

@@ -12,3 +12,10 @@ groups:
 types:
   added: New Feature
   fixed: Bug fix
+
+# Defines how the generated markdown looks
+markdown:
+    # You can choose between dash (-), asterisks (*) or plus sign (+)
+    listStyle: -
+    # if set to true groups are rendered as markdown lists
+    groupsAsList: false
