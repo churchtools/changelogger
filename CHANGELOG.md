@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
+## [v0.7.0] - 2022-01-12
+
+### Feature removal (1 change)
+
+- Drop support for PHP 7.3
+
+### New feature (1 change)
+
+- Support PHP 8.0
+
+### Security fix (1 change)
+
+- Update npm packages with security patches (only used by website)
+
+
 ## [v0.6.0] - 2021-12-14
 
 ### New feature (4 changes)
