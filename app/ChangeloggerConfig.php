@@ -129,6 +129,7 @@ class ChangeloggerConfig
         return $types !== null ? array_flip($types) : $defaultTypes;
     }
 
+    /** @phpstan-return array{listStyle?: string, groupsAsList?: bool} */
     public function getMarkdownOptions(): array {
         $options = [];
         $defaultOptions = config('changelogger.markdown');
