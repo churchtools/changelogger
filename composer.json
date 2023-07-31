@@ -21,11 +21,12 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
-        "ext-json": "*"
+        "php": "^8.1",
+        "ext-json": "*",
+        "laravel/prompts": "dev-main"
     },
     "require-dev": {
-        "laravel-zero/framework": "^8.9",
+        "laravel-zero/framework": "^10.0",
         "mockery/mockery": "^1.4",
         "phpunit/phpunit": "^9.5",
         "symfony/yaml": "^5.3"

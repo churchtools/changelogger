@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 use RuntimeException;
+use function Laravel\Prompts\text;
 
 class NewCommand extends Command
 {
@@ -19,7 +20,7 @@ class NewCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'new 
+    protected $signature = 'new
                             {--f|force : Override existing changelog if one exists with the same name}
                             {--dry-run : Don\'t actually write anything, just print.}
                             {--t|type= : Type of changelog}
@@ -111,7 +112,7 @@ class NewCommand extends Command
         }
 
         while ($title === '') {
-            $title = $this->ask('Your changelog');
+            $title = text('Your changelog?', 'Upgrade Laravel to v10.0', required: true);
         }
 
         $logEntry = new LogEntry($title, $type, $author, $group);
