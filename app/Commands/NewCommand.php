@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 use RuntimeException;
+use function Laravel\Prompts\search;
+use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
 class NewCommand extends Command
@@ -85,7 +87,15 @@ class NewCommand extends Command
         }
 
         if ($type === null) {
-            $type = $this->choice('Type of change', $this->types->keys());
+            $type = search(
+                'Type of change',
+                fn($value) => collect($this->types->keys())
+                    ->filter(fn ($key) => !$value || str($key)->contains($value, true))
+                    ->values()
+                    ->all(),
+                scroll: count($this->types->keys())
+            );
+
             $type = $this->types->getValue($type);
 
             if ($type === 'ignore') {
@@ -97,7 +107,7 @@ class NewCommand extends Command
         }
 
         if ($group === null && $this->config->hasGroups()) {
-            $group = $this->choice('Group of change', $this->config->getGroups());
+            $group = select('Group of change', $this->config->getGroups());
         }
 
         try {
@@ -112,7 +122,7 @@ class NewCommand extends Command
         }
 
         while ($title === '') {
-            $title = text('Your changelog?', 'Upgrade Laravel to v10.0', required: true);
+            $title = text('Your changelog', 'Upgrade Laravel to v10.0', required: true);
         }
 
         $logEntry = new LogEntry($title, $type, $author, $group);
