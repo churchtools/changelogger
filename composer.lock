@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fbbc438945fbb1e51f347eda58183366",
+    "content-hash": "60f4fe5d8380d2404020c1526887a030",
     "packages": [
         {
             "name": "illuminate/collections",
@@ -203,16 +203,16 @@
         },
         {
             "name": "laravel/prompts",
-            "version": "dev-main",
+            "version": "v0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/prompts.git",
-                "reference": "eeae4d7b41a873a9912184a234dfa02e783d5f21"
+                "reference": "a5295e14c9d3e94ff24683e5db0b0a29fad8f6e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/prompts/zipball/eeae4d7b41a873a9912184a234dfa02e783d5f21",
-                "reference": "eeae4d7b41a873a9912184a234dfa02e783d5f21",
+                "url": "https://api.github.com/repos/laravel/prompts/zipball/a5295e14c9d3e94ff24683e5db0b0a29fad8f6e1",
+                "reference": "a5295e14c9d3e94ff24683e5db0b0a29fad8f6e1",
                 "shasum": ""
             },
             "require": {
@@ -230,7 +230,6 @@
             "suggest": {
                 "ext-pcntl": "Required for the spinner to be animated."
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "files": [
@@ -246,9 +245,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/prompts/issues",
-                "source": "https://github.com/laravel/prompts/tree/main"
+                "source": "https://github.com/laravel/prompts/tree/v0.1.2"
             },
-            "time": "2023-07-29T23:43:33+00:00"
+            "time": "2023-08-02T13:59:58+00:00"
         },
         {
             "name": "psr/container",
@@ -6132,9 +6131,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "laravel/prompts": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
