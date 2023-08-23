@@ -122,7 +122,7 @@ class NewCommand extends Command
         }
 
         while ($title === '') {
-            $title = text('Your changelog', 'Upgrade Laravel to v10.0', required: true);
+            $title = text('Your changelog', 'Installed flux capacitor for better stability', required: true);
         }
 
         $logEntry = new LogEntry($title, $type, $author, $group);
