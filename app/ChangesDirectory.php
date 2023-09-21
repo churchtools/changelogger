@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Finder\SplFileInfo;
 
 class ChangesDirectory
 {
@@ -36,22 +37,31 @@ class ChangesDirectory
         }
     }
 
+    /**
+     * Check if any unreleased log files exists.
+     */
+    public function hasFiles(): bool {
+        return count($this->getAll()) > 0;
+    }
+
 
     /**
      * Check if any unreleased changes exists.
-     *
-     * @return bool
      */
     public function hasChanges() : bool
     {
-        return count($this->getAll()) > 0;
+        return collect($this->getAll())
+              ->filter(function (SplFileInfo $file) {
+                  return !(LogEntry::parse($file)->ignore());
+              })
+        ->isNotEmpty();
     }
 
 
     /**
      * Get all files of unreleased changes.
      *
-     * @return array<\SplFileInfo>
+     * @return array<SplFileInfo>
      */
     public function getAll() : array
     {

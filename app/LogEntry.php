@@ -130,4 +130,7 @@ class LogEntry
         return $this->group;
     }
 
+    public function ignore(): bool {
+        return $this->type() === "ignore";
+    }
 }
