@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{239:function(n,t,a){"use strict";a.r(t);var e={name:"ChangelogLayout"},l=a(14),o=Object(l.a)(e,(function(){return(0,this._self._c)("Content",{staticClass:"changelog-layout px-8"})}),[],!1,null,null,null);t.default=o.exports}}]);
