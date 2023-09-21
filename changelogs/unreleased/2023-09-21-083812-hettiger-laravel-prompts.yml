@@ -1,0 +1,4 @@
+title: 'Drop support for PHP 7.4, and PHP 8.0'
+type: removed
+author: '@hettiger'
+group: ''
