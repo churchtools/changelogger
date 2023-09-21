@@ -13,6 +13,7 @@ class ReleaseTest extends TestCase
     public function tearDown(): void
     {
         File::delete(config('changelogger.directory') . '/CHANGELOG.md');
+        File::delete(config('changelogger.directory') . '/.changelogger.yml');
     }
 
     public function testBuildingChangelogWith2Logs() : void
@@ -125,7 +126,6 @@ CHANGE;
 
     public function testBuildingEmptyChangelog() : void
     {
-        File::delete(config('changelogger.directory') . '/CHANGELOG.md');
         $this->artisan('release', ['tag' => 'v1.0.0'])
             ->expectsOutput('No Changes -> No Changelog for v1.0.0 created')
             ->assertExitCode(0);
@@ -200,6 +200,52 @@ CHANGE;
 
 - **Wiki**
   - Feature 1 added
+
+CHANGE;
+
+        $this->assertEquals(
+            $changelog,
+            File::get(config('changelogger.directory') . '/CHANGELOG.md')
+        );
+    }
+
+    public function testEmptyReleaseDoesNotUpdateChangelogFile(): void {
+        /**
+         * Preparation: Create v1.0.0 Release
+         */
+        $this->artisan('new',
+            ['--type' => 'added', '--message' => 'Feature 1 added', '--file' => 'file1']) ->assertExitCode(0);
+        $this->assertFileExists(config('changelogger.unreleased') . '/file1.yml');
+        $this->artisan('release', ['tag' => 'v1.0.0'])
+             ->expectsOutput('Changelog for v1.0.0 created')
+             ->assertExitCode(0);
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/file1.yml');
+        $this->assertFileExists(config('changelogger.directory') . '/CHANGELOG.md');
+
+        /** TEST: Add Empty Changelog -> Expcet no change of CHANGELOG.md */
+        $this->artisan('new',
+            ['--empty' => true,  '--file' => 'empty'])
+            ->expectsOutput('Changelog generated:')
+             ->assertExitCode(0);
+
+        $this->assertFileExists(config('changelogger.unreleased') . '/empty.yml');
+
+        $this->artisan('release', ['tag' => 'v1.1.0'])
+             ->expectsOutput('No Changes -> No Changelog for v1.1.0 created')
+             ->assertExitCode(0);
+
+        $this->assertCommandCalled('release', ['tag' => 'v1.1.0']);
+        $this->assertFileDoesNotExist(config('changelogger.unreleased') . '/empty.yml');
+
+        $today = Carbon::now()->format('Y-m-d');
+        $changelog = <<<CHANGE
+<!-- CHANGELOGGER -->
+
+## [v1.0.0] - {$today}
+
+### New feature (1 change)
+
+- Feature 1 added
 
 CHANGE;
 

@@ -64,6 +64,7 @@ class ReleaseCommand extends Command
     {
         if ( ! $this->dir->hasChanges()) {
            $this->info("No Changes -> No Changelog for {$this->argument('tag')} created");
+           $this->dir->clean();
            return;
         }
 

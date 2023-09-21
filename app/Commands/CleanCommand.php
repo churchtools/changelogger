@@ -46,7 +46,7 @@ class CleanCommand extends Command
      */
     public function handle()
     {
-        if (! $this->dir->hasChanges()) {
+        if (! $this->dir->hasFiles()) {
             $this->info("No logs. Nothing to delete.");
 
             return;
