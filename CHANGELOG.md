@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
+## [v0.8.0] - 2023-09-21
+
+### Feature removal (1 change)
+
+- Drop support for PHP 7.4, and PHP 8.0. New requirement is PHP 8.1 (props @hettiger)
+
+### Other (1 change)
+
+- Use Laravel Prompts package as new interface (props @hettiger)
+
+### Feature change (2 changes)
+
+- Update Laravel-Zero to v10 (props @hettiger)
+- If only empty changelogs exist, no Changelog will be added when a release is triggered. However, the log files will be removed.
+
+
 ## [v0.7.0] - 2022-01-12
 
 ### Feature removal (1 change)

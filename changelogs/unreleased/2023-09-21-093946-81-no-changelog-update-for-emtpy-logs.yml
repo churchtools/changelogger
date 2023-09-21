@@ -1,4 +1,0 @@
-title: 'If only empty changelogs exist, no Changelog will be added when a release is triggered. However, the log files will be removed.'
-type: changed
-author: ''
-group: ''

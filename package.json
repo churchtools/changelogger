@@ -1,13 +1,13 @@
 {
   "name": "@churchtools/changelogger",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Changelogger CLI",
   "repository": "git@github.com:churchtools/changelogger.git",
   "author": "Hans-Helge Buerger <hhbuerger@churchtools.de>",
   "license": "Apache-2.0",
   "dependencies": {
     "tailwindcss": "^1.9.6",
-    "vuepress": "^1.8.2"
+    "vuepress": "^1.9"
   },
   "scripts": {
     "docs:start": "cd docs && vuepress dev",
