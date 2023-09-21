@@ -27,7 +27,7 @@ In the end, if a new version is built, _Changelogger_ takes all unreleased chang
 
 ## Installation
 
-This package requires PHP 7.3
+This package requires PHP 8.1
 You can require the package as a dev-dependency
 
 ```bash
