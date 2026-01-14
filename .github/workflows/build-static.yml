@@ -1,0 +1,99 @@
+name: Build Static Binary
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux-x86_64
+            spc_arch: linux-x86_64
+            binary_name: changelogger-linux-x86_64
+          - os: ubuntu-latest
+            target: linux-aarch64
+            spc_arch: linux-aarch64
+            binary_name: changelogger-linux-aarch64
+          - os: macos-13
+            target: macos-x86_64
+            spc_arch: macos-x86_64
+            binary_name: changelogger-darwin-x86_64
+          - os: macos-14
+            target: macos-aarch64
+            spc_arch: macos-aarch64
+            binary_name: changelogger-darwin-aarch64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      - name: Install dependencies (with dev for Laravel Zero)
+        run: composer install --prefer-dist --optimize-autoloader
+
+      - name: Download static-php-cli
+        run: |
+          curl -fsSL https://dl.static-php.dev/static-php-cli/spc-bin/nightly/spc-${{ matrix.spc_arch }}.tar.gz -o spc.tar.gz
+          tar -xzf spc.tar.gz
+          chmod +x spc
+
+      - name: Run doctor (auto-fix dependencies)
+        run: ./spc doctor --auto-fix || true
+
+      - name: Download PHP sources
+        run: ./spc download --for-extensions=json,mbstring,tokenizer,ctype,filter,phar,iconv --with-php=8.2
+
+      - name: Build micro binary
+        run: ./spc build json,mbstring,tokenizer,ctype,filter,phar,iconv --build-micro
+
+      - name: Download Box
+        run: curl -fsSL https://github.com/box-project/box/releases/latest/download/box.phar -o box.phar
+
+      - name: Build PHAR (without compression for micro compatibility)
+        run: php box.phar compile --config=box-micro.json
+
+      - name: Combine micro + PHAR
+        run: |
+          cat buildroot/bin/micro.sfx builds/changelogger-micro.phar > ${{ matrix.binary_name }}
+          chmod +x ${{ matrix.binary_name }}
+
+      - name: Test binary
+        run: ./${{ matrix.binary_name }} --version
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.binary_name }}
+          path: ${{ matrix.binary_name }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: binaries
+          merge-multiple: true
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: binaries/*
+          generate_release_notes: true
