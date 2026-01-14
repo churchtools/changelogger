@@ -1,0 +1,3 @@
+---
+title: Remove deprecated Travis CI configuration and use GitHub Actions
+type: changed
