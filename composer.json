@@ -50,7 +50,8 @@
         "post-create-project-cmd": [
             "@php application app:rename"
         ],
-        "test": "phpunit --colors=always --testdox"
+        "test": "phpunit --colors=always --testdox",
+        "docker:build": "docker build -t churchtools/changelogger ."
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

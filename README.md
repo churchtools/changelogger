@@ -34,10 +34,24 @@ You can require the package as a dev-dependency
 composer require --dev churchtools/changelogger
 ```
 
-or install it globally.
+or install it globally
 
 ```bash
 composer global require churchtools/changelogger
+```
+
+or build a docker image.
+
+```bash
+composer run docker:build
+```
+
+Then add this to e.g. your `~/.profile`:
+
+```bash
+changelogger () {
+  docker run --rm -it -v $(PWD):/app churchtools/changelogger changelogger $@
+}
 ```
 
 ## Usage
