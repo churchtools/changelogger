@@ -10,7 +10,7 @@ use Tests\TestCase;
 class ChangeloggerConfigTest extends TestCase
 {
 
-    public function groupProvider() : array
+    public static function groupProvider() : array
     {
         $expected = ['Wiki', 'Person', 'Report', 'Calendar', 'Checkin'];
 

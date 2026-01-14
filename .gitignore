@@ -3,5 +3,6 @@
 /.vscode
 /.vagrant
 .phpunit.result.cache
+.phpunit.cache
 /node_modules
 docs/.vuepress/dist
