@@ -14,6 +14,7 @@ class ReleaseTest extends TestCase
     {
         File::delete(config('changelogger.directory') . '/CHANGELOG.md');
         File::delete(config('changelogger.directory') . '/.changelogger.yml');
+        parent::tearDown();
     }
 
     public function testBuildingChangelogWith2Logs() : void
