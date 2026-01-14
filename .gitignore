@@ -6,3 +6,14 @@
 .phpunit.cache
 /node_modules
 docs/.vuepress/dist
+
+# Static binary build artifacts
+/spc
+/spc.tar.gz
+/downloads
+/source
+/buildroot
+/pkgroot
+/box.phar
+/changelogger-*
+/builds/changelogger-micro.phar
