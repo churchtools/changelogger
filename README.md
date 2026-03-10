@@ -56,6 +56,21 @@ changelogger clean
 
 ![Changelogger Demo](assets/changelogger-demo.gif)
 
+## AI Agent Skills
+
+Changelogger ships with [Amp Skills](https://ampcode.com) that teach AI coding agents how to use Changelogger correctly. Copy the skill directories into your project to enable your AI agent to create changelog entries and releases automatically.
+
+```bash
+# Copy the skills into your project
+cp -r .agents/skills/using-changelogger /path/to/your-project/.agents/skills/
+cp -r .agents/skills/releasing-with-changelogger /path/to/your-project/.agents/skills/
+```
+
+| Skill | Description |
+|-------|-------------|
+| `using-changelogger` | Teaches the agent to create changelog entries with `changelogger new` |
+| `releasing-with-changelogger` | Teaches the agent to create releases with `changelogger release` |
+
 ## License
 
 [churchtools/changelogger](https://github.com/churchtools/changelogger) is licensed under the
