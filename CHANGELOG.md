@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
+## [v0.8.1] - 2026-05-18
+
+### Feature change (3 changes)
+
+- Remove deprecated Travis CI configuration and use GitHub Actions (props @obstschale)
+- Update agent skills for Changelogger workflows (props @obstschale)
+- Update to PHP 8.2+ and Laravel Zero 11 with PHPUnit 11 (props @obstschale)
+
+
 ## [v0.8.0] - 2023-09-21
 
 ### Feature removal (1 change)
