@@ -36,6 +36,7 @@ If the file or marker does not exist, inform the user — the release command ne
 
 ### 3. Run the Release
 
+
 ```bash
 changelogger release <tag>
 ```
@@ -60,16 +61,30 @@ head -50 CHANGELOG.md
 
 Confirm the new section looks correct and the `changelogs/unreleased/` directory is empty.
 
-### 5. Commit the Changes
+### 5. Update project files
 
-Stage both the updated `CHANGELOG.md` and the removed unreleased files:
+Check project files like `package.json`, `manifest.json`, `composer.json`, or others to see if a version is set and update that field. Use the same <tag> as in Step 3.
+If necessary run install for the project to update the .lock file.
+
+### 6. Commit the Changes
+
+Stage the updated `CHANGELOG.md`, updated project files (+ lock files), and the removed unreleased files:
 
 ```bash
-git add CHANGELOG.md changelogs/unreleased/
+git add CHANGELOG.md changelogs/unreleased/ package.json manifest.json composer.json
 git commit -m "Release <tag>"
 ```
 
 Only commit if the user has asked you to. Do **not** push without explicit consent.
+
+### 7. Set Git Tag
+
+```bash
+git tag <tag>
+```
+
+Save the current <tag> as git tag after the changes were committed.
+
 
 ## Other Useful Commands
 

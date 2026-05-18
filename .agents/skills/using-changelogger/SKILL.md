@@ -1,6 +1,6 @@
 ---
 name: using-changelogger
-description: "Creates changelog entries using the Changelogger CLI tool. Use when asked to create a changelog entry, when preparing a merge request, or when suggesting a changelog for significant code changes."
+description: "Creates changelog entries using the Changelogger CLI tool. Use when asked to create a changelog entry, when preparing a merge request, when suggesting a changelog for significant code changes, or when the keyword 'finished' is used."
 ---
 
 # Using Changelogger
