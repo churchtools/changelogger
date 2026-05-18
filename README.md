@@ -25,6 +25,10 @@ In the end, if a new version is built, _Changelogger_ takes all unreleased chang
 
 **Changelogger is not taking your git-logs.** There exists many tools that take your git-log and converts commit messages to changelog entries. IMHO, this leads in many cases to bad changelogs. Commit messages are not changelogs. They are pieces of information for developers and not the users. Our changelogs are handcrafted because non-developers, AKA our users, should be able to understand the changes.
 
+## Demo
+
+![Changelogger Demo](assets/changelogger-demo.gif)
+
 ## Installation
 
 This package requires PHP 8.1
@@ -53,8 +57,6 @@ changelogger release <tag>
 # Need to start over? Run `clean` to remove all unreleased logs.
 changelogger clean
 ```
-
-![Changelogger Demo](assets/changelogger-demo.gif)
 
 ## AI Agent Skills
 
