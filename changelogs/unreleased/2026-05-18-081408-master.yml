@@ -1,4 +1,0 @@
-title: 'Pin Composer platform to PHP 8.2 so dependency resolution targets the lowest supported PHP version'
-type: fixed
-author: '@obstschale'
-group: ''

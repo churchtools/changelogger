@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- CHANGELOGGER -->
 
+## [v0.8.2] - 2026-05-18
+
+### Bug fix (1 change)
+
+- Pin Composer platform to PHP 8.2 so dependency resolution targets the lowest supported PHP version (props @obstschale)
+
+
 ## [v0.8.1] - 2026-05-18
 
 ### Feature change (3 changes)
