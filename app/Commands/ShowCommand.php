@@ -2,10 +2,10 @@
 
 namespace App\Commands;
 
-use App\ChangeloggerConfig;
+use App\ChangelogMarkdownGenerator;
 use App\ChangesDirectory;
 use App\LogEntry;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 
 class ShowCommand extends Command
@@ -16,34 +16,34 @@ class ShowCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'show';
+    protected $signature = 'show {version? : Released version to show}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Show unreleased changes';
+    protected $description = 'Show unreleased or released changes';
 
     /** @var ChangesDirectory */
     private $dir;
 
-    /** @var ChangeloggerConfig */
-    private $config;
+    /** @var ChangelogMarkdownGenerator */
+    private $markdownGenerator;
 
 
     /**
      * ShowCommand constructor.
      *
-     * @param ChangesDirectory   $dir
-     * @param ChangeloggerConfig $config
+     * @param ChangesDirectory          $dir
+     * @param ChangelogMarkdownGenerator $markdownGenerator
      */
-    public function __construct(ChangesDirectory $dir, ChangeloggerConfig $config)
+    public function __construct(ChangesDirectory $dir, ChangelogMarkdownGenerator $markdownGenerator)
     {
         parent::__construct();
         $this->dir = $dir;
         $this->dir->init();
-        $this->config = $config;
+        $this->markdownGenerator = $markdownGenerator;
     }
 
 
@@ -54,60 +54,61 @@ class ShowCommand extends Command
      */
     public function handle()
     {
-        $this->table($this->tableHeaders(), $this->tableRows());
+        if ($this->argument('version') !== null) {
+            return $this->showReleasedVersion($this->argument('version'));
+        }
+
+        $this->line($this->generateUnreleasedMarkdown());
+        return 0;
     }
 
 
-    private function tableHeaders() : array
+    private function generateUnreleasedMarkdown() : string
     {
-        if ($this->config->hasGroups()) {
-            return ['No.', 'Type', 'Group', 'Log', 'Author'];
-        }
-
-        return ['No.', 'Type', 'Log', 'Author'];
-    }
-
-
-    private function tableRows() : array
-    {
-        $hasGroups          = $this->config->hasGroups();
-        $groupByFunctions[] = static function (LogEntry $logEntry) {
-            return $logEntry->type();
-        };
-
-        if ($hasGroups) {
-            $groupByFunctions[] = static function (LogEntry $logEntry) {
-                return $logEntry->group();
-            };
-        }
-
         $changes = collect();
         foreach ($this->dir->getAll() as $file) {
             $changes->push(LogEntry::parse($file));
         }
 
-        return $changes->groupBy($groupByFunctions)->filter(static function (
-                Collection $logType,
-                $key
-            ) {
-                return $key !== 'ignore';
-            })->sort()->flatten()->map(static function (LogEntry $log, $key) use ($hasGroups) {
-                if ($hasGroups) {
-                    return [
-                        $key + 1,
-                        $log->type(),
-                        $log->group(),
-                        $log->title(),
-                        $log->author()
-                    ];
-                }
+        return $this->markdownGenerator->generate($changes);
+    }
 
-                return [
-                    $key + 1,
-                    $log->type(),
-                    $log->title(),
-                    $log->author()
-                ];
-            })->toArray();
+
+    private function showReleasedVersion(string $version) : int
+    {
+        $changelogPath = config('changelogger.directory') . '/CHANGELOG.md';
+
+        if ( ! File::exists($changelogPath)) {
+            return $this->releaseNotFound($version);
+        }
+
+        $releaseSection = $this->findReleaseSection(File::get($changelogPath), $version);
+
+        if ($releaseSection === null) {
+            return $this->releaseNotFound($version);
+        }
+
+        $this->line($releaseSection);
+        return 0;
+    }
+
+
+    private function findReleaseSection(string $changelog, string $version) : ?string
+    {
+        $quotedVersion = preg_quote($version, '/');
+        $pattern = "/^## \[{$quotedVersion}\].*?(?=\n## \[|\z)/ms";
+
+        if (preg_match($pattern, $changelog, $matches) !== 1) {
+            return null;
+        }
+
+        return rtrim($matches[0]);
+    }
+
+
+    private function releaseNotFound(string $version) : int
+    {
+        $this->error("Error: Release \"{$version}\" was not found in CHANGELOG.md.");
+        return 1;
     }
 }
