@@ -2,12 +2,10 @@
 
 namespace App\Commands;
 
-use App\ChangeloggerConfig;
+use App\ChangelogMarkdownGenerator;
 use App\ChangesDirectory;
 use App\LogEntry;
-use App\Types;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use LaravelZero\Framework\Commands\Command;
 
@@ -31,27 +29,22 @@ class ReleaseCommand extends Command
     /** @var ChangesDirectory */
     private $dir;
 
-    /** @var Types */
-    private $types;
-
-    /** @var ChangeloggerConfigConfig */
-    private $config;
+    /** @var ChangelogMarkdownGenerator */
+    private $markdownGenerator;
 
 
     /**
      * BuildChangelog constructor.
      *
-     * @param ChangesDirectory   $dir
-     * @param Types              $types
-     * @param ChangeloggerConfig $config
+     * @param ChangesDirectory          $dir
+     * @param ChangelogMarkdownGenerator $markdownGenerator
      */
-    public function __construct(ChangesDirectory $dir, Types $types, ChangeloggerConfig $config)
+    public function __construct(ChangesDirectory $dir, ChangelogMarkdownGenerator $markdownGenerator)
     {
         parent::__construct();
-        $this->dir   = $dir;
+        $this->dir = $dir;
         $this->dir->init();
-        $this->types = $types;
-        $this->config = $config;
+        $this->markdownGenerator = $markdownGenerator;
     }
 
 
@@ -73,7 +66,7 @@ class ReleaseCommand extends Command
             $changes->push(LogEntry::parse($file));
         }
 
-        $content = $this->generateContent($changes);
+        $content = $this->markdownGenerator->generate($changes);
         $this->build($content);
 
         $this->info("Changelog for {$this->argument('tag')} created");
@@ -108,70 +101,4 @@ CONTENT;
     }
 
 
-    private function generateContent(Collection $changes) : string
-    {
-        $groupByFunctions[] = static function (LogEntry $logEntry) {
-            return $logEntry->type();
-        };
-
-        if ($this->config->hasGroups()) {
-            $groupByFunctions[] = static function (LogEntry $logEntry) {
-                return $logEntry->group();
-            };
-        }
-
-        $changes = $changes->groupBy($groupByFunctions)->filter(static function (Collection $logType, $key) {
-            return $key !== 'ignore';
-        })->sort();
-
-        return $changes->map(function (Collection $logType, $key) {
-            $header  = $this->types->getName($key);
-            $count   = $logType->count();
-            $changes = sprintf('%d %s', $count, $count === 1 ? 'change' : 'changes');
-            $content = "### {$header} ({$changes})\n\n";
-            $markdownOptions = $this->config->getMarkdownOptions();
-
-            if ($this->config->hasGroups()) {
-                $content .= $logType->sort(function (Collection $logA,  Collection $logB) {
-                    return $this->config->compare($logA->first()->group(), $logB->first()->group());
-                })->map(static function (Collection $group, $name) use ($markdownOptions){
-                    if ($markdownOptions['groupsAsList']) {
-                        $content = "{$markdownOptions['listStyle']} **{$name}**\n";
-                    } else {
-                        $content = "#### {$name}\n\n";
-                    }
-
-                    $content .= $group->map(static function (LogEntry $log) use ($markdownOptions) {
-                        $changeEntry = "";
-                        if ($markdownOptions['groupsAsList']) {
-                            $changeEntry = "  ";
-                        }
-                        $changeEntry .= "{$markdownOptions['listStyle']} {$log->title()}";
-
-                        if ($log->hasAuthor()) {
-                            $changeEntry .= " (props {$log->author()})";
-                        }
-
-                        return $changeEntry;
-                    })->implode("\n");
-
-                    return $content;
-                })->implode("\n\n");
-            } else {
-                $content .= $logType->map(static function (LogEntry $log) use ($markdownOptions) {
-                    $changeEntry = "{$markdownOptions['listStyle']} {$log->title()}";
-
-                    if ($log->hasAuthor()) {
-                        $changeEntry .= " (props {$log->author()})";
-                    }
-
-                    return $changeEntry;
-                })->implode("\n");
-
-            }
-
-            $content .= "\n";
-            return $content;
-        })->implode("\n");
-    }
 }
